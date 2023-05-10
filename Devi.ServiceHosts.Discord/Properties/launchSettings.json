@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Devi.ServiceHosts.Discord": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

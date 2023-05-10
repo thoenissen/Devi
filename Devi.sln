@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.Discord", "Devi.ServiceHosts.Discord\Devi.ServiceHosts.Discord.csproj", "{96935095-DBE7-4386-A7A3-89EDDFB00EAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Service", "01_Service", "{F93CE977-C34D-4B02-96AA-037322626A76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_Shared", "02_Shared", "{534BB16E-63F4-4324-A86C-33EF07B8D91F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_Tests", "03_Tests", "{5D6ACBB0-734E-47FA-A899-0DF0AEF519B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{034B56CA-CECF-4540-8642-6896842BB78E}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		README.md = README.md
+		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
+		stylecop.json = stylecop.json
+		StyleCop.Release.ruleset = StyleCop.Release.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{5BB0937F-3A2B-4AB5-9EC8-ED54FEFE5E25}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\SetDockerEnvironmentVariables.ps1 = scripts\SetDockerEnvironmentVariables.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96935095-DBE7-4386-A7A3-89EDDFB00EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96935095-DBE7-4386-A7A3-89EDDFB00EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96935095-DBE7-4386-A7A3-89EDDFB00EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96935095-DBE7-4386-A7A3-89EDDFB00EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{96935095-DBE7-4386-A7A3-89EDDFB00EAE} = {F93CE977-C34D-4B02-96AA-037322626A76}
+		{5BB0937F-3A2B-4AB5-9EC8-ED54FEFE5E25} = {034B56CA-CECF-4540-8642-6896842BB78E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {611DD04B-90FD-4C54-9A3A-594CC2ED7C7B}
+	EndGlobalSection
+EndGlobal

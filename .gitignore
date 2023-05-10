@@ -90,7 +90,6 @@ StyleCopReport.xml
 *.tmp_proj
 *_wpftmp.csproj
 *.log
-*.tlog
 *.vspscc
 *.vssscc
 .builds
@@ -141,11 +140,6 @@ _TeamCity*
 # AxoCover is a Code Coverage Tool
 .axoCover/*
 !.axoCover/settings.json
-
-# Coverlet is a free, cross platform Code Coverage Tool
-coverage*.json
-coverage*.xml
-coverage*.info
 
 # Visual Studio code coverage results
 *.coverage
@@ -396,3 +390,61 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+
+# Ignoring private configuration
+Docker.env
+Docker_Test.env
+Docker_Productive.env
+.env
+environment.js
+environment.template.js
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+**/dist
+**/tmp
+**/out-tsc
+# Only exists if Bazel was run
+**/bazel-out
+
+# dependencies
+**/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# angular
+.angular
+
+# System Files
+.DS_Store
+Thumbs.db
