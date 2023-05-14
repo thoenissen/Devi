@@ -13,8 +13,14 @@
         <DocumentationFile>bin\Release\Devi.ServiceHosts.WebApi.xml</DocumentationFile>
         <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
+    <ItemGroup>
+      <Content Remove="Resources\Languages\de-DE.json" />
+    </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Languages\de-DE.json" />
   </ItemGroup>
 
   <ItemGroup>

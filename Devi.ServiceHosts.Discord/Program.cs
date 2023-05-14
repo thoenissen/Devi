@@ -119,7 +119,6 @@ internal class Program
             builder.Services.AddTransient(type);
         }
 
-        builder.Services.AddSingleton(new LocalizationService());
         builder.Services.AddSingleton<WebApiConnector>();
 
         var app = builder.Build();
