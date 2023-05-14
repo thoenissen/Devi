@@ -1,24 +1,24 @@
-{
+﻿{
     "$schema": "https://json.schemastore.org/launchsettings.json",
     "profiles": {
-        "Docker": {
-            "commandName": "Docker",
-            "DockerfileRunArguments": "--env-file Docker.env",
-            "dotnetRunMessages": true,
-            "launchBrowser": false,
-            "launchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
-            "httpPort": "42010",
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        },
+      "Docker": {
+          "commandName": "Docker",
+          "DockerfileRunArguments": "--env-file Docker.env",
+          "dotnetRunMessages": true,
+          "launchBrowser": false,
+          "launchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+          "httpPort": "42020",
+          "environmentVariables": {
+              "ASPNETCORE_ENVIRONMENT": "Development"
+          }
+      },
         "Swagger": {
             "commandName": "Docker",
             "DockerfileRunArguments": "--env-file Docker.env",
             "dotnetRunMessages": true,
             "launchBrowser": true,
             "launchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
-            "httpPort": "42010",
+            "httpPort": "42020",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }

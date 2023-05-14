@@ -1,4 +1,4 @@
-﻿foreach($line in Get-Content .\Devi.ServiceHosts.Discord\Docker.env) 
+﻿foreach($line in Get-Content .\Devi.ServiceHosts.WebApi\Docker.env) 
 {
 	$tmp = $line.Split("=")
 
