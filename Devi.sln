@@ -31,9 +31,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.WebApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.Core", "Devi.ServiceHosts.Core\Devi.ServiceHosts.Core.csproj", "{0F79FEA8-80B9-44D7-9388-84819CCCEB42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devi.ServiceHosts.DTOs", "Devi.ServiceHosts.DTOs\Devi.ServiceHosts.DTOs.csproj", "{9DE51550-3987-451B-83E9-0813281A4C8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.DTOs", "Devi.ServiceHosts.DTOs\Devi.ServiceHosts.DTOs.csproj", "{9DE51550-3987-451B-83E9-0813281A4C8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devi.ServiceHosts.Clients", "Devi.ServiceHosts.Clients\Devi.ServiceHosts.Clients.csproj", "{55F8344F-401C-4030-B9BD-7B9BCD6EE2DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.Clients", "Devi.ServiceHosts.Clients\Devi.ServiceHosts.Clients.csproj", "{55F8344F-401C-4030-B9BD-7B9BCD6EE2DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1E547D5B-AC99-4C50-9C43-65D819DE97DE}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +77,7 @@ Global
 		{0F79FEA8-80B9-44D7-9388-84819CCCEB42} = {534BB16E-63F4-4324-A86C-33EF07B8D91F}
 		{9DE51550-3987-451B-83E9-0813281A4C8E} = {534BB16E-63F4-4324-A86C-33EF07B8D91F}
 		{55F8344F-401C-4030-B9BD-7B9BCD6EE2DE} = {534BB16E-63F4-4324-A86C-33EF07B8D91F}
+		{1E547D5B-AC99-4C50-9C43-65D819DE97DE} = {034B56CA-CECF-4540-8642-6896842BB78E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {611DD04B-90FD-4C54-9A3A-594CC2ED7C7B}
