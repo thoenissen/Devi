@@ -7,6 +7,9 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Devi.ServiceHosts.WebApi/Devi.ServiceHosts.WebApi.csproj", "Devi.ServiceHosts.WebApi/"]
+COPY ["Devi.ServiceHosts.Clients/Devi.ServiceHosts.Clients.csproj", "Devi.ServiceHosts.Clients/"]
+COPY ["Devi.ServiceHosts.DTOs/Devi.ServiceHosts.DTOs.csproj", "Devi.ServiceHosts.DTOs/"]
+COPY ["Devi.ServiceHosts.Core/Devi.ServiceHosts.Core.csproj", "Devi.ServiceHosts.Core/"]
 RUN dotnet restore "Devi.ServiceHosts.WebApi/Devi.ServiceHosts.WebApi.csproj"
 COPY . .
 WORKDIR "/src/Devi.ServiceHosts.WebApi"
