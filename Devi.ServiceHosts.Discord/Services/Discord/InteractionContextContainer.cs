@@ -166,6 +166,24 @@ public sealed class InteractionContextContainer : LocatedServiceBase, IInteracti
     }
 
     /// <summary>
+    /// Modify original response
+    /// </summary>
+    /// <param name="action">Modify action</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ModifyOriginalResponseAsync(Action<MessageProperties> action)
+    {
+        try
+        {
+            await _interaction.ModifyOriginalResponseAsync(action)
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new DiscordAbortedException();
+        }
+    }
+
+    /// <summary>
     /// Delete original response
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

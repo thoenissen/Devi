@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.ServiceHosts.Discord.Commands.Base;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;

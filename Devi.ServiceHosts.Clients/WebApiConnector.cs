@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Devi.ServiceHosts.DTOs.Docker;
 using Devi.ServiceHosts.DTOs.Reminders;
 
 namespace Devi.ServiceHosts.Clients;
@@ -9,7 +12,9 @@ namespace Devi.ServiceHosts.Clients;
 /// <summary>
 /// WebApi connector
 /// </summary>
-public class WebApiConnector : ConnectorBase
+public sealed class WebApiConnector : ConnectorBase,
+                                      IRemindersConnector,
+                                      IDockerConnector
 {
     #region Constructor
 
@@ -24,14 +29,56 @@ public class WebApiConnector : ConnectorBase
 
     #endregion // Constructor
 
-    #region Methods
+    #region Properties
+
+    /// <summary>
+    /// Reminders
+    /// </summary>
+    public IRemindersConnector Reminders => this;
+
+    /// <summary>
+    /// Docker
+    /// </summary>
+    public IDockerConnector Docker => this;
+
+    #endregion // Properties
+
+    #region IRemindersConnector
 
     /// <summary>
     /// Creation of a one time reminder
     /// </summary>
     /// <param name="dto">DTO</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task CreateOneTimeReminder(CreateOneTimeReminderDTO dto) => Post("reminders", dto);
+    Task IRemindersConnector.CreateOneTimeReminder(CreateOneTimeReminderDTO dto) => Post("Reminders", dto);
 
-    #endregion // Methods
+    #endregion // IRemindersConnector
+
+    #region IDockerConnector
+
+    /// <summary>
+    /// Get docker containers
+    /// </summary>
+    /// <param name="serverId">Server ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<List<DockerContainerDTO>> IDockerConnector.GetDockerContainers(ulong serverId) => Get<List<DockerContainerDTO>>("Docker/Containers",
+                                                                                                                         new NameValueCollection
+                                                                                                                         {
+                                                                                                                             ["serverId"] = serverId.ToString(),
+                                                                                                                         });
+
+    /// <summary>
+    /// Add or refresh dto
+    /// </summary>
+    /// <param name="serverId">Server ID</param>
+    /// <param name="dto">Container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task IDockerConnector.AddOrRefreshContainer(ulong serverId, DockerContainerDTO dto) => Put("Docker/Containers",
+                                                                                               dto,
+                                                                                               new NameValueCollection
+                                                                                               {
+                                                                                                   ["serverId"] = serverId.ToString()
+                                                                                               });
+
+    #endregion // IDockerConnector
 }

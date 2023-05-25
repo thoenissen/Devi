@@ -79,6 +79,8 @@ public class Program
         builder.Services.AddHttpClient();
 
         builder.Services.AddSingleton<DiscordConnector>();
+        builder.Services.AddSingleton<MongoClientFactory>();
+        builder.Services.AddSingleton<DockerClientFactory>();
 
         builder.Services.AddTransient<RepositoryFactory>();
 

@@ -29,11 +29,6 @@ public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionCon
     public LocalizationService LocalizationService { protected get; set; }
 
     /// <summary>
-    /// HttpClient-Factory
-    /// </summary>
-    public IHttpClientFactory HttpClientFactory { protected get; set; }
-
-    /// <summary>
     /// Localization group
     /// </summary>
     public LocalizationGroup LocalizationGroup => _localizationGroup ??= LocalizationService.GetGroup(GetType().Name);

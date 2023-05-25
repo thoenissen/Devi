@@ -140,7 +140,8 @@ public class ReminderCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task CreateReminder(InteractionContextContainer context, CreateOneTimeReminderDTO data)
     {
-        await _connector.CreateOneTimeReminder(data)
+        await _connector.Reminders
+                        .CreateOneTimeReminder(data)
                         .ConfigureAwait(false);
 
         await context.ReplyAsync(LocalizationGroup.GetFormattedText("ReminderCreated",

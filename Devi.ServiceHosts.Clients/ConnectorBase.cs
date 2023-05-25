@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,17 @@ namespace Devi.ServiceHosts.Clients;
 /// </summary>
 public abstract class ConnectorBase
 {
+    #region Nested classes
+
+    /// <summary>
+    /// Dummy type
+    /// </summary>
+    private class Void
+    {
+    }
+
+    #endregion // Nested classes
+
     #region Fields
 
     /// <summary>
@@ -49,31 +61,113 @@ public abstract class ConnectorBase
     /// <typeparam name="T">DTO type</typeparam>
     /// <param name="route">Route</param>
     /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task Post<T>(string route, T dto)
-    {
-        using (var client = _clientFactory.CreateClient())
-        {
-            var content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+    public Task Post<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Post, route, dto, parameters);
 
-            using (var response = await client.PostAsync(BuildUrl(route), content)
-                                              .ConfigureAwait(false))
-            {
-                response.EnsureSuccessStatusCode();
-            }
-        }
-    }
+    /// <summary>
+    /// Put
+    /// </summary>
+    /// <typeparam name="T">DTO type</typeparam>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task Put<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Put, route, dto, parameters);
+
+    /// <summary>
+    /// Get
+    /// </summary>
+    /// <typeparam name="T">DTO type</typeparam>
+    /// <param name="route">Route</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<T> Get<T>(string route, NameValueCollection parameters = null) => Send<Void, T>(HttpMethod.Get, route, null, parameters);
 
     #endregion // Public methods
 
     #region Private methods
 
     /// <summary>
+    /// Get
+    /// </summary>
+    /// <typeparam name="TIn">Input DTO type</typeparam>
+    /// <typeparam name="TOut">Output DTO type</typeparam>
+    /// <param name="method">Methods</param>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task<TOut> Send<TIn, TOut>(HttpMethod method, string route, TIn dto, NameValueCollection parameters = null)
+    {
+        using (var client = _clientFactory.CreateClient())
+        {
+            HttpContent content = null;
+
+            if (dto != null)
+            {
+                content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            }
+
+            var request = new HttpRequestMessage(method, BuildUri(route, parameters))
+                          {
+                              Content = content
+                          };
+
+            request.Content = content;
+
+            using (var response = await client.SendAsync(request)
+                                              .ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+
+                if (typeof(TOut) != typeof(Void))
+                {
+                    var jsonResult = await response.Content
+                                                   .ReadAsStringAsync()
+                                                   .ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<TOut>(jsonResult);
+                }
+            }
+        }
+
+        return default;
+    }
+
+    /// <summary>
     /// Build url
     /// </summary>
     /// <param name="route">Route</param>
+    /// <param name="parameters">Parameters</param>
     /// <returns>Combined url</returns>
-    private Uri BuildUrl(string route) => new(_baseUrl, route);
+    private Uri BuildUri(string route, NameValueCollection parameters)
+    {
+        var uri = new Uri(_baseUrl, route);
+
+        if (parameters?.Count > 0)
+        {
+            var sb = new StringBuilder();
+
+            foreach (string key in parameters.Keys)
+            {
+                var values = parameters.GetValues(key);
+
+                if (values!= null)
+                {
+                    foreach (var value in values)
+                    {
+                        sb.Append(sb.Length == 0 ? "?" : "&");
+                        sb.AppendFormat("{0}={1}", Uri.EscapeDataString(key), Uri.EscapeDataString(value));
+                    }
+                }
+            }
+
+            uri = new Uri(uri, sb.ToString());
+        }
+
+        return uri;
+    }
 
     #endregion // Private methods
 }
