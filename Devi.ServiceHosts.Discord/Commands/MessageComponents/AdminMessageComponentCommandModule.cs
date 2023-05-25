@@ -24,11 +24,18 @@ public class AdminMessageComponentCommandModule : LocatedInteractionModuleBase
     #region Commands
 
     /// <summary>
-    /// Appointment lead configuration
+    /// Create docker container
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [ComponentInteraction("admin;docker;create")]
     public Task CreateDockerContainer() => CommandHandler.CreateNewContainer(Context);
+
+    /// <summary>
+    /// Refresh containers
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ComponentInteraction("admin;docker;refresh")]
+    public Task RefreshDockerContainer() => CommandHandler.RefreshContainers(Context);
 
     /// <summary>
     /// Show information of selected container

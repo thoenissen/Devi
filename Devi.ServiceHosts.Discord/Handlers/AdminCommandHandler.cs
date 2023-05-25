@@ -52,9 +52,9 @@ public class AdminCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ShowDockerAssistant(InteractionContextContainer context)
+    public async Task ShowDockerContainerAssistant(InteractionContextContainer context)
     {
-        var messageDataTask = GetDockerContainerOverview(context.Guild.Id);
+        var messageDataTask = GetDockerContainerOverview(context.Guild.Id, true);
 
         await context.DeferAsync()
                             .ConfigureAwait(false);
@@ -64,6 +64,43 @@ public class AdminCommandHandler : LocatedServiceBase
         await context.ReplyAsync(embed: embed.Build(),
                                  components: components.Build())
                             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Show docker command assistant
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ShowDockerContainerOverview(InteractionContextContainer context)
+    {
+        var messageDataTask = GetDockerContainerOverview(context.Guild.Id, false);
+
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        var (embed, components) = await messageDataTask.ConfigureAwait(false);
+
+        await context.ReplyAsync(embed: embed.Build(),
+                                 components: components.Build())
+                     .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Refresh containers list
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task RefreshContainers(InteractionContextContainer context)
+    {
+        var messageDataTask = GetDockerContainerOverview(context.Guild.Id, false);
+
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        var (embed, _) = await messageDataTask.ConfigureAwait(false);
+
+        await context.ModifyOriginalResponseAsync(obj => obj.Embed = embed.Build())
+                     .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -97,7 +134,7 @@ public class AdminCommandHandler : LocatedServiceBase
                                                })
                         .ConfigureAwait(false);
 
-        var (embed, components) = await GetDockerContainerOverview(context.Guild.Id).ConfigureAwait(false);
+        var (embed, components) = await GetDockerContainerOverview(context.Guild.Id, true).ConfigureAwait(false);
 
         await context.ModifyOriginalResponseAsync(obj =>
                                                   {
@@ -119,8 +156,9 @@ public class AdminCommandHandler : LocatedServiceBase
     /// Get overview of existing docker containers
     /// </summary>
     /// <param name="serverId">Server ID</param>
+    /// <param name="isEditEnabled">Is editing allowed?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task<(EmbedBuilder Embed, ComponentBuilder Components)> GetDockerContainerOverview(ulong serverId)
+    private async Task<(EmbedBuilder Embed, ComponentBuilder Components)> GetDockerContainerOverview(ulong serverId, bool isEditEnabled)
     {
         var containers = await _connector.Docker
                                          .GetDockerContainers(serverId)
@@ -134,8 +172,19 @@ public class AdminCommandHandler : LocatedServiceBase
                                       .WithColor(Color.Blue)
                                       .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64");
 
-        var components = new ComponentBuilder().WithButton(LocalizationGroup.GetText("DockerCreate", "Create"), "admin;docker;create", ButtonStyle.Success)
-                                               .WithSelectMenu(new SelectMenuBuilder("admin;docker;selectContainer", containers.Select(obj => new SelectMenuOptionBuilder().WithValue(obj.Name).WithLabel(obj.Description)).ToList()));
+        var components = new ComponentBuilder();
+
+        if (isEditEnabled)
+        {
+            components.WithButton(LocalizationGroup.GetText("DockerCreate", "Create"), "admin;docker;create", ButtonStyle.Success);
+        }
+
+        components.WithButton(LocalizationGroup.GetText("DockerRefresh", "Refresh"),
+                              "admin;docker;refresh",
+                              ButtonStyle.Secondary,
+                              new Emoji("🔄"));
+
+        // TODO .WithSelectMenu(new SelectMenuBuilder("admin;docker;selectContainer", containers.Select(obj => new SelectMenuOptionBuilder().WithValue(obj.Name).WithLabel(obj.Description)).ToList()));
 
         return (embed, components);
     }

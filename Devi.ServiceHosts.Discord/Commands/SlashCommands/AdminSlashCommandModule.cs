@@ -30,8 +30,15 @@ public class AdminSlashCommandModule : SlashCommandModuleBase
     /// Docker
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("docker", "Docker")]
-    public Task ShowDockerAssistant() => CommandHandler.ShowDockerAssistant(Context);
+    [SlashCommand("docker-edit", "Docker")]
+    public Task ShowDockerContainerAssistant() => CommandHandler.ShowDockerContainerAssistant(Context);
+
+    /// <summary>
+    /// Docker
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("docker-overview", "Docker")]
+    public Task ShowDockerContainerOverview() => CommandHandler.ShowDockerContainerOverview(Context);
 
     #endregion // Methods
 }
