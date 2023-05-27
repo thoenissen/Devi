@@ -6,12 +6,11 @@ using Devi.ServiceHosts.Clients;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Commands.Modals.Data;
+using Devi.ServiceHosts.Discord.Exceptions;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.Docker;
 
 using Discord;
-
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
@@ -34,6 +33,17 @@ public class AdminCommandHandler : LocatedServiceBase
     /// <summary>
     /// Constructor
     /// </summary>
+    static AdminCommandHandler()
+    {
+        if (ulong.TryParse(Environment.GetEnvironmentVariable("DEVI_OWNER_USER_ID"), out var userId))
+        {
+            OwnerUserId = userId;
+        }
+    }
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="connector">Connector</param>
     public AdminCommandHandler(LocalizationService localizationService,
@@ -44,6 +54,15 @@ public class AdminCommandHandler : LocatedServiceBase
     }
 
     #endregion // Constructor
+
+    #region Properties
+
+    /// <summary>
+    /// Owner user id
+    /// </summary>
+    public static ulong OwnerUserId { get; }
+
+    #endregion // Properties
 
     #region Methods
 
@@ -110,6 +129,11 @@ public class AdminCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateNewContainer(InteractionContextContainer context)
     {
+        if (context.User.Id != OwnerUserId)
+        {
+            throw new DiscordMissingPermissionsException();
+        }
+
         await context.RespondWithModalAsync<CreateDockerContainerModalData>("modal;admin;docker;create")
                      .ConfigureAwait(false);
     }
