@@ -47,6 +47,27 @@ public static class DiscordEmoteService
     public static IEmote GetLoadingEmote(IDiscordClient client) => GetEmote(client, "Loading");
 
     /// <summary>
+    /// Get 'Gold'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetGoldEmote(IDiscordClient client) => GetEmote(client, "Gold");
+
+    /// <summary>
+    /// Get 'Silver'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetSilverEmote(IDiscordClient client) => GetEmote(client, "Silver");
+
+    /// <summary>
+    /// Get 'Copper'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetCopperEmote(IDiscordClient client) => GetEmote(client, "Copper");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>
