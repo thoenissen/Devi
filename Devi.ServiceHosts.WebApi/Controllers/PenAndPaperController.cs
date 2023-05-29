@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
@@ -59,18 +60,39 @@ public class PenAndPaperController : ControllerBase
     [Route("Campaigns")]
     public async Task<IActionResult> CreateContainer([FromBody] CreateCampaignDTO data)
     {
+        var firstSessionTimeStamp = DateTime.Today.Add(data.Time);
+
+        while (firstSessionTimeStamp.DayOfWeek != data.DayOfWeek
+            || firstSessionTimeStamp < DateTime.Now)
+        {
+            firstSessionTimeStamp = firstSessionTimeStamp.AddDays(1);
+        }
+
+        var campaign = new CampaignEntity
+                       {
+                           Id = ObjectId.GenerateNewId(),
+                           Name = data.Name,
+                           Description = data.Description.TrimEnd(),
+                           ChannelId = data.ChannelId,
+                           MessageId = data.MessageId,
+                           ThreadId = data.ThreadId,
+                           DungeonMasterUserId = data.DungeonMasterUserId
+                       };
+
         await _mongoFactory.Create()
                            .GetDatabase(_mongoFactory.Database)
                            .GetCollection<CampaignEntity>("Campaigns")
-                           .InsertOneAsync(new CampaignEntity
+                           .InsertOneAsync(campaign)
+                           .ConfigureAwait(false);
+
+        await _mongoFactory.Create()
+                           .GetDatabase(_mongoFactory.Database)
+                           .GetCollection<SessionEntity>("Sessions")
+                           .InsertOneAsync(new SessionEntity
                                            {
                                                Id = ObjectId.GenerateNewId(),
-                                               Name = data.Name,
-                                               Description = data.Description,
-                                               ChannelId = data.ChannelId,
-                                               MessageId = data.MessageId,
-                                               ThreadId = data.ThreadId,
-                                               DungeonMasterUserId = data.DungeonMasterUserId
+                                               CampaignId = campaign.Id,
+                                               TimeStamp = firstSessionTimeStamp
                                            })
                            .ConfigureAwait(false);
 
@@ -82,7 +104,8 @@ public class PenAndPaperController : ControllerBase
                                                            ChannelId = data.ChannelId,
                                                            MessageId = data.MessageId,
                                                            ThreadId = data.ThreadId,
-                                                           DungeonMasterUserId = data.DungeonMasterUserId
+                                                           DungeonMasterUserId = data.DungeonMasterUserId,
+                                                           SessionTimeStamp = firstSessionTimeStamp
                                                        })
                                .ConfigureAwait(false);
 

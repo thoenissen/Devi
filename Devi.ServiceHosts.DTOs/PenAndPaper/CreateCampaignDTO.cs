@@ -1,4 +1,6 @@
-﻿namespace Devi.ServiceHosts.DTOs.PenAndPaper;
+﻿using System;
+
+namespace Devi.ServiceHosts.DTOs.PenAndPaper;
 
 /// <summary>
 /// Campaign creation
@@ -34,4 +36,14 @@ public class CreateCampaignDTO
     /// Dungeon master user ID
     /// </summary>
     public ulong DungeonMasterUserId { get; set; }
+
+    /// <summary>
+    /// Day of week
+    /// </summary>
+    public DayOfWeek? DayOfWeek { get; set; }
+
+    /// <summary>
+    /// Time
+    /// </summary>
+    public TimeSpan Time { get; set; }
 }

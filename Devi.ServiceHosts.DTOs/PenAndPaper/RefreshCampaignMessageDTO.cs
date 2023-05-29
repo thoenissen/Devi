@@ -1,4 +1,6 @@
-﻿namespace Devi.ServiceHosts.DTOs.PenAndPaper;
+﻿using System;
+
+namespace Devi.ServiceHosts.DTOs.PenAndPaper;
 
 /// <summary>
 /// Refreshing campaign message
@@ -34,4 +36,9 @@ public class RefreshCampaignMessageDTO
     /// Dungeon master user ID
     /// </summary>
     public ulong DungeonMasterUserId { get; set; }
+
+    /// <summary>
+    /// Session time stamp
+    /// </summary>
+    public DateTime SessionTimeStamp { get; set; }
 }

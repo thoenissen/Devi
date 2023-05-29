@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Core.Localization;
@@ -57,8 +58,16 @@ public class PenAndPaperController : LocatedControllerBase
         {
             if (await channel.GetMessageAsync(dto.MessageId).ConfigureAwait(false) is IUserMessage message)
             {
+                var sessionRegistrations = new StringBuilder();
+
+                if (sessionRegistrations.Length == 0)
+                {
+                    sessionRegistrations.Append("> \u200b");
+                }
+
                 var embed = new EmbedBuilder().WithTitle(dto.Name)
                                               .WithDescription(LocalizationGroup.GetFormattedText("Description", "{0}\n\n**DM:** <@{1}>", dto.Description, dto.DungeonMasterUserId))
+                                              .AddField(LocalizationGroup.GetFormattedText("Session", "Session {0:g}", dto.SessionTimeStamp), sessionRegistrations.ToString())
                                               .WithTimestamp(DateTimeOffset.Now)
                                               .WithColor(Color.DarkGreen)
                                               .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64");

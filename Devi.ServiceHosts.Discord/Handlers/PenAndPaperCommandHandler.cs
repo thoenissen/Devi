@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.WebApi;
@@ -62,35 +64,52 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateCampaign(InteractionContextContainer context, CreateCampaignModalData data)
     {
-        await context.DeferAsync()
-                     .ConfigureAwait(false);
+        DayOfWeek? selectedDay = null;
 
-        if (context.Channel is ITextChannel textChannel)
+        foreach (var dayOfWeek in Enum.GetValues(typeof(DayOfWeek)).OfType<DayOfWeek>())
         {
-            var message = await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("CampaignCreationLoading", "{0} The campaign is being created.", DiscordEmoteService.GetLoadingEmote(context.Client)))
-                                           .ConfigureAwait(false);
+            if (LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(dayOfWeek).StartsWith(data.Day))
+            {
+                selectedDay = dayOfWeek;
+                break;
+            }
+        }
 
-            await message.PinAsync()
-                         .ConfigureAwait(false);
-
-            var thread = await textChannel.CreateThreadAsync(LocalizationGroup.GetText("CampaignCreationLogThread", "Log"), ThreadType.PublicThread, ThreadArchiveDuration.OneWeek)
-                                          .ConfigureAwait(false);
-
-            await thread.AddUserAsync(context.Member)
-                        .ConfigureAwait(false);
-
-            await textChannel.DeleteMessageAsync(thread.Id)
+        if (selectedDay != null
+         && TimeSpan.TryParseExact(data.Time, "hh\\:mm", LocalizationGroup.CultureInfo, out var selectedTime))
+        {
+            if (context.Channel is ITextChannel textChannel)
+            {
+                await context.DeferAsync()
                              .ConfigureAwait(false);
 
-            _connector.PenAndPaper.CreateCampaign(new CreateCampaignDTO
-                                                    {
-                                                        Name = data.Name,
-                                                        Description = data.Description,
-                                                        ChannelId = textChannel.Id,
-                                                        MessageId = message.Id,
-                                                        ThreadId = thread.Id,
-                                                        DungeonMasterUserId = context.User.Id
-                                                    });
+                var message = await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("CampaignCreationLoading", "{0} The campaign is being created.", DiscordEmoteService.GetLoadingEmote(context.Client)))
+                                               .ConfigureAwait(false);
+
+                await message.PinAsync()
+                             .ConfigureAwait(false);
+
+                var thread = await textChannel.CreateThreadAsync(LocalizationGroup.GetText("CampaignCreationLogThread", "Log"), ThreadType.PublicThread, ThreadArchiveDuration.OneWeek)
+                                              .ConfigureAwait(false);
+
+                await thread.AddUserAsync(context.Member)
+                            .ConfigureAwait(false);
+
+                await textChannel.DeleteMessageAsync(thread.Id)
+                                 .ConfigureAwait(false);
+
+                _connector.PenAndPaper.CreateCampaign(new CreateCampaignDTO
+                                                      {
+                                                          Name = data.Name,
+                                                          Description = data.Description,
+                                                          ChannelId = textChannel.Id,
+                                                          MessageId = message.Id,
+                                                          ThreadId = thread.Id,
+                                                          DungeonMasterUserId = context.User.Id,
+                                                          DayOfWeek = selectedDay,
+                                                          Time = selectedTime
+                                                      });
+            }
         }
     }
 

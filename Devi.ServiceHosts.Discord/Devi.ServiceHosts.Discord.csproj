@@ -15,12 +15,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Resources\Emotes.json" />
+    <Content Remove="Resources\Languages\de-DE.json" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Emotes.json" />
+    <EmbeddedResource Include="Resources\Languages\de-DE.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.10.0" />
