@@ -3,6 +3,7 @@
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
 
+using Discord;
 using Discord.Interactions;
 
 namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
@@ -10,6 +11,7 @@ namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
 /// <summary>
 /// Reminder commands
 /// </summary>
+[DefaultMemberPermissions(GuildPermission.SendMessages)]
 [Group("reminder", "Reminder creation")]
 public class ReminderSlashCommandModule : SlashCommandModuleBase
 {
