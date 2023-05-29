@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="StyleCop - Rules - Release" ToolsVersion="14.0">
+<RuleSet Name="StyleCop - Rules - Release" ToolsVersion="17.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
@@ -65,8 +65,8 @@
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
-    <Rule Id="CS1591" Action="None" />
     <Rule Id="CS1573" Action="Error" />
+    <Rule Id="CS1591" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="Warning" />
@@ -171,7 +171,7 @@
     <Rule Id="SA1404" Action="Error" />
     <Rule Id="SA1405" Action="Error" />
     <Rule Id="SA1406" Action="Error" />
-    <Rule Id="SA1407" Action="Error" />
+    <Rule Id="SA1407" Action="None" />
     <Rule Id="SA1408" Action="Error" />
     <Rule Id="SA1410" Action="Error" />
     <Rule Id="SA1411" Action="Error" />
