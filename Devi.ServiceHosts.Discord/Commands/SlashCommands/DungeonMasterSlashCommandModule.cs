@@ -28,7 +28,7 @@ public class DungeonMasterSlashCommandModule : SlashCommandModuleBase
     /// Campaign creation
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("create-campaign", "")]
+    [SlashCommand("create-campaign", "Campaign creation")]
     public Task CreateCampaign() => CommandHandler.CreateCampaign(Context);
 
     #endregion // Methods
