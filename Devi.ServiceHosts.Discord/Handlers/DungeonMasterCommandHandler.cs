@@ -2,6 +2,7 @@
 
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
+using Devi.ServiceHosts.Discord.Commands.Modals.Data;
 using Devi.ServiceHosts.Discord.Services.Discord;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
@@ -31,7 +32,11 @@ public class DungeonMasterCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task CreateCampaign(InteractionContextContainer context) => throw new System.NotImplementedException();
+    public async Task CreateCampaign(InteractionContextContainer context)
+    {
+        await context.RespondWithModalAsync<CreateCampaignModalData>("modal;dm;campaign;create")
+                     .ConfigureAwait(false);
+    }
 
     #endregion // Methods
 }
