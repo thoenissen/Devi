@@ -59,7 +59,6 @@ public class UtilityCommandHandler : LocatedServiceBase
                                                          DiscordEmoteService.GetCopperEmote(context.Client)));
 
         embed.WithDescription(sb.ToString())
-             .WithColor(Color.DarkBlue)
              .WithFooter(LocalizationGroup.GetText("CoinSplitterApproval", "Approved by Khrela!"), "https://cdn.discordapp.com/attachments/1111028091784019990/1112338614274228284/Khrela_portrait.png")
              .WithColor(Color.Green)
              .WithTimestamp(DateTime.Now);
@@ -121,6 +120,65 @@ public class UtilityCommandHandler : LocatedServiceBase
             embed.AddField("\u200b", LocalizationGroup.GetFormattedText("CoinSplitterLeftOver", "There are {0} {1} left.", leftoverCopper, DiscordEmoteService.GetCopperEmote(context.Client)));
         }
 
+        await context.ReplyAsync(embed: embed.Build()).ConfigureAwait(false);
+    }
+
+
+    /// <summary>
+    /// Rolling given dice with a specified modifier
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="diceCount"></param>
+    /// <param name="diceType"></param>
+    /// <param name="modifier"></param>
+    /// <returns></returns>
+    public async Task RollMod(InteractionContextContainer context, int diceCount, int diceType, int? modifier)
+    {
+
+        var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("DiceRollerTitle", "Dice Roller"))
+                                      .WithColor(Color.DarkRed)
+                                      .WithTimestamp(DateTime.Now)
+                                      .WithFooter(LocalizationGroup.GetText("DiceRollerApproval", "*Happy Robot noises*"), "https://cdn.discordapp.com/attachments/1111028091784019990/1112693034967113819/image.png");
+        if (modifier != null)
+        {
+            embed.WithDescription(LocalizationGroup.GetFormattedText("RollDescription", "Rolling **{0}d{1}{2:+#;-#}** for you", diceCount, diceType, modifier.Value));
+        }
+        else
+        {
+            embed.WithDescription(LocalizationGroup.GetFormattedText("RollDescription", "Rolling **{0}d{1}** for you", diceCount, diceType));
+        }
+
+        var sb = new StringBuilder();
+
+        if (diceCount > 0)
+        {
+            var rnd = new Random(DateTime.Now.Nanosecond);
+            var sum = 0;
+
+            //Rolling our dice
+            for (var i = 0; i < diceCount; i++)
+            {
+                var tempcounter = i + 1;
+                var tempnumber = rnd.Next(diceType) + 1;
+                sum += tempnumber;
+
+                var tempstring = "#" + tempcounter + ": " + Format.Bold(tempnumber.ToString());
+                sb.AppendLine(tempstring.ToString());
+            }
+            //Showing the rolled dice
+            embed.AddField(LocalizationGroup.GetFormattedText("DiceRolls", "Rolls: "), sb.ToString());
+
+            //Showing the sum of our roll
+            if (modifier != null)
+            {
+                sum += modifier.Value;
+                embed.AddField(LocalizationGroup.GetFormattedText("Sum", "**Sum {0:+#;-#}**:", modifier.Value), LocalizationGroup.GetFormattedText("Total", "total = **{0}**", sum));
+            }
+            else
+            {
+                embed.AddField(LocalizationGroup.GetFormattedText("Sum", "**Sum**:"), LocalizationGroup.GetFormattedText("Total", "total = **{0}**", sum));
+            }
+        }
         await context.ReplyAsync(embed: embed.Build()).ConfigureAwait(false);
     }
 

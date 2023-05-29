@@ -37,5 +37,18 @@ public class UtilitySlashCommandModule : SlashCommandModuleBase
                       [Summary("Copper", "The number of copper pieces you want to split")] int copperCount,
                       [Summary("Players", "The number of players the currency will be split to")] int playerCount) => CommandHandler.SplitCoins(Context, goldCount, silverCount, copperCount, playerCount);
 
+
+    /// <summary>
+    /// Dice Roller with a modifier value
+    /// </summary>
+    /// <param name="diceCount"></param>
+    /// <param name="diceType"></param>
+    /// <param name="modifier"></param>
+    /// <returns></returns>
+    [SlashCommand("roll", "Rolling random numbers with a modifier")]
+    public Task RollMod([Summary("DiceCount", "The number of dice that will be rolled")] int diceCount,
+                        [Summary("DiceType", "The type of die that will be rolled")] int diceType,
+                        [Summary("Modifier", "The modifier you want to apply to the roll")] int? modifier = null) => CommandHandler.RollMod(Context, diceCount, diceType, modifier);
+
     #endregion //Methods
 }
