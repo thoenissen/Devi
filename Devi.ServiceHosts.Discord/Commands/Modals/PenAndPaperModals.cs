@@ -1,19 +1,17 @@
 ﻿using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Discord.Commands.Base;
+using Devi.ServiceHosts.Discord.Commands.Modals.Data;
 using Devi.ServiceHosts.Discord.Handlers;
 
-using Discord;
 using Discord.Interactions;
 
-namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
+namespace Devi.ServiceHosts.Discord.Commands.Modals;
 
 /// <summary>
-/// Dungeon master commands
+/// Pen and paper modals
 /// </summary>
-[DefaultMemberPermissions(GuildPermission.SendMessages)]
-[Group("dm", "Dungeon master commands")]
-public class DungeonMasterSlashCommandModule : SlashCommandModuleBase
+public class PenAndPaperModals : LocatedInteractionModuleBase
 {
     #region Properties
 
@@ -27,11 +25,13 @@ public class DungeonMasterSlashCommandModule : SlashCommandModuleBase
     #region Methods
 
     /// <summary>
-    /// Campaign creation
+    /// Create campaign
     /// </summary>
+    /// <param name="modalData">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("create-campaign", "Campaign creation")]
-    public Task CreateCampaign() => CommandHandler.CreateCampaign(Context);
+    [ModalInteraction("modal;pnp;campaign;create")]
+    public Task CreateCampaign(CreateCampaignModalData modalData) => CommandHandler.CreateCampaign(Context, modalData);
 
     #endregion // Methods
+
 }

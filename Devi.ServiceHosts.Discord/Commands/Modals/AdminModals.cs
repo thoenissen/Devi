@@ -25,12 +25,12 @@ public class AdminModals : LocatedInteractionModuleBase
     #region Methods
 
     /// <summary>
-    /// Add or refresh a Guild Wars 2 account
+    /// Create new docker container
     /// </summary>
     /// <param name="modalData">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction("modal;admin;docker;create")]
-    public Task AddOrRefreshGuildWarsAccount(CreateDockerContainerModalData modalData) => CommandHandler.CreateNewContainer(Context, modalData);
+    public Task CreateNewContainer(CreateDockerContainerModalData modalData) => CommandHandler.CreateNewContainer(Context, modalData);
 
     #endregion // Methods
 

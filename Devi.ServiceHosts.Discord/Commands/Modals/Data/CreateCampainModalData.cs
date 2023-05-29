@@ -26,6 +26,6 @@ public class CreateCampaignModalData : IModal
     /// </summary>
     [InputLabel("Description")]
     [RequiredInput]
-    [ModalTextInput(nameof(Description), TextInputStyle.Paragraph, "A House Divided is a tale of gothic horror and familial drama. The adventure features immersive exploration and tactically challenging combat, but its primary gameplay emphasis is social interaction with a rich cast of nuanced characters. What choices will the party make within the halls of Raventree Estate? What allegiances will they forge and what betrayals will they commit? Will the heroes restore the manor to its former glory, release it from its torment, or seize its power for their own?")]
+    [ModalTextInput(nameof(Description), TextInputStyle.Paragraph, "A House Divided is a tale of gothic horror and familial drama. The adventure features immersive...")]
     public string Description { get; set; }
 }

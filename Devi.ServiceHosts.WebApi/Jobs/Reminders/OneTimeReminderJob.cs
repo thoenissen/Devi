@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Clients;
+using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.DTOs.Reminders;
 using Devi.ServiceHosts.WebApi.Data.Entity;
 using Devi.ServiceHosts.WebApi.Data.Entity.Repositories.Reminder;
@@ -74,7 +74,8 @@ public class OneTimeReminderJob : LocatedAsyncJob
 
                         try
                         {
-                            await GetService<DiscordConnector>().PostOneTimeReminder(new PostReminderMessageDTO
+                            await GetService<DiscordConnector>().Reminders
+                                                                .PostOneTimeReminder(new PostReminderMessageDTO
                                                                                      {
                                                                                          UserId = jobEntity.DiscordUserId,
                                                                                          ChannelId = jobEntity.ChannelId,

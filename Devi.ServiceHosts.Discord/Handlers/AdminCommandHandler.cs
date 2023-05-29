@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Clients;
+using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Commands.Modals.Data;

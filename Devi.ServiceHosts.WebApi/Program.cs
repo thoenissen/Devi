@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Clients;
+using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.WebApi.Data.Entity;
 using Devi.ServiceHosts.WebApi.Services;

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Clients;
+using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Services.Discord;

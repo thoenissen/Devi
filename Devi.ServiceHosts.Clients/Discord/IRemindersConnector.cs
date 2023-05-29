@@ -2,7 +2,7 @@
 
 using Devi.ServiceHosts.DTOs.Reminders;
 
-namespace Devi.ServiceHosts.Clients;
+namespace Devi.ServiceHosts.Clients.Discord;
 
 /// <summary>
 /// Reminders connector
@@ -14,5 +14,5 @@ public interface IRemindersConnector
     /// </summary>
     /// <param name="dto">DTO</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task CreateOneTimeReminder(CreateOneTimeReminderDTO dto);
+    Task PostOneTimeReminder(PostReminderMessageDTO dto);
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Devi.ServiceHosts.DTOs.Docker;
 
-namespace Devi.ServiceHosts.Clients;
+namespace Devi.ServiceHosts.Clients.WebApi;
 
 /// <summary>
 /// Docker connector

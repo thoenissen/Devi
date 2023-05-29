@@ -4,17 +4,20 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.Docker;
+using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.DTOs.Reminders;
 
-namespace Devi.ServiceHosts.Clients;
+namespace Devi.ServiceHosts.Clients.WebApi;
 
 /// <summary>
 /// WebApi connector
 /// </summary>
 public sealed class WebApiConnector : ConnectorBase,
                                       IRemindersConnector,
-                                      IDockerConnector
+                                      IDockerConnector,
+                                      IPenAndPaperConnector
 {
     #region Constructor
 
@@ -40,6 +43,11 @@ public sealed class WebApiConnector : ConnectorBase,
     /// Docker
     /// </summary>
     public IDockerConnector Docker => this;
+
+    /// <summary>
+    /// Pen and paper
+    /// </summary>
+    public IPenAndPaperConnector PenAndPaper => this;
 
     #endregion // Properties
 
@@ -81,4 +89,14 @@ public sealed class WebApiConnector : ConnectorBase,
                                                                                                });
 
     #endregion // IDockerConnector
+
+    #region IPenAndPaperConnector
+
+    /// <summary>
+    /// Create campaign
+    /// </summary>
+    /// <param name="dto">Campaign data</param>
+    void IPenAndPaperConnector.CreateCampaign(CreateCampaignDTO dto) => Post("PenAndPaper/Campaigns", dto);
+
+    #endregion // IPenAndPaperConnector
 }

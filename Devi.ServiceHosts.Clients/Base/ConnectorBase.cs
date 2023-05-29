@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-namespace Devi.ServiceHosts.Clients;
+namespace Devi.ServiceHosts.Clients.Base;
 
 /// <summary>
 /// Connector base
@@ -110,9 +110,9 @@ public abstract class ConnectorBase
             }
 
             var request = new HttpRequestMessage(method, BuildUri(route, parameters))
-                          {
-                              Content = content
-                          };
+            {
+                Content = content
+            };
 
             request.Content = content;
 
@@ -153,7 +153,7 @@ public abstract class ConnectorBase
             {
                 var values = parameters.GetValues(key);
 
-                if (values!= null)
+                if (values != null)
                 {
                     foreach (var value in values)
                     {
