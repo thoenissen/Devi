@@ -1,9 +1,9 @@
 ﻿namespace Devi.ServiceHosts.DTOs.PenAndPaper;
 
 /// <summary>
-/// Refreshing campaign message
+/// Get current session
 /// </summary>
-public class RefreshCampaignMessageDTO
+public class GetCurrentSessionDTO
 {
     /// <summary>
     /// Channel ID

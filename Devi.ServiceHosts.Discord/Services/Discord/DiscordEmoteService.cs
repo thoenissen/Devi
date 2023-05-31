@@ -68,6 +68,20 @@ public static class DiscordEmoteService
     public static IEmote GetCopperEmote(IDiscordClient client) => GetEmote(client, "Copper");
 
     /// <summary>
+    /// Get 'Check'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetCheckEmote(IDiscordClient client) => GetEmote(client, "Check");
+
+    /// <summary>
+    /// Get 'Cross'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetCrossEmote(IDiscordClient client) => GetEmote(client, "Cross");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

@@ -8,7 +8,7 @@ using Discord.Interactions;
 namespace Devi.ServiceHosts.Discord.Commands.MessageComponents;
 
 /// <summary>
-/// Calendar component commands
+/// Admin component commands
 /// </summary>
 public class AdminMessageComponentCommandModule : LocatedInteractionModuleBase
 {

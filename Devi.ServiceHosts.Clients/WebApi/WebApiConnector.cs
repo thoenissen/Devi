@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.Design;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -96,7 +97,29 @@ public sealed class WebApiConnector : ConnectorBase,
     /// Create campaign
     /// </summary>
     /// <param name="dto">Campaign data</param>
-    void IPenAndPaperConnector.CreateCampaign(CreateCampaignDTO dto) => Post("PenAndPaper/Campaigns", dto);
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.CreateCampaign(CreateCampaignDTO dto) => Post("PenAndPaper/Campaigns", dto);
+
+    /// <summary>
+    /// Join session
+    /// </summary>
+    /// <param name="dto">Join data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.JoinSession(JoinSessionDTO dto) => Post("PenAndPaper/Sessions/Registration", dto);
+
+    /// <summary>
+    /// Leave session
+    /// </summary>
+    /// <param name="dto">Leave data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.LeaveSession(LeaveSessionDTO dto) => Delete("PenAndPaper/Sessions/Registration", dto);
+
+    /// <summary>
+    /// Get current session
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task<CurrentSessionDTO> IPenAndPaperConnector.GetCurrentSession(ulong channelId) => Get<CurrentSessionDTO>($"PenAndPaper/Sessions/Current/{channelId}");
 
     #endregion // IPenAndPaperConnector
 }

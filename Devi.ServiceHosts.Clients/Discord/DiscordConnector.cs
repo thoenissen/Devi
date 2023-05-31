@@ -11,7 +11,7 @@ namespace Devi.ServiceHosts.Clients.Discord;
 /// <summary>
 /// Discord connector
 /// </summary>
-public class DiscordConnector : ConnectorBase,
+public sealed class DiscordConnector : ConnectorBase,
                                 IRemindersConnector,
                                 IPenAndPaperConnector
 {

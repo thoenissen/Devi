@@ -98,19 +98,59 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
                 await textChannel.DeleteMessageAsync(thread.Id)
                                  .ConfigureAwait(false);
 
-                _connector.PenAndPaper.CreateCampaign(new CreateCampaignDTO
-                                                      {
-                                                          Name = data.Name,
-                                                          Description = data.Description,
-                                                          ChannelId = textChannel.Id,
-                                                          MessageId = message.Id,
-                                                          ThreadId = thread.Id,
-                                                          DungeonMasterUserId = context.User.Id,
-                                                          DayOfWeek = selectedDay,
-                                                          Time = selectedTime
-                                                      });
+                await _connector.PenAndPaper
+                                .CreateCampaign(new CreateCampaignDTO
+                                                {
+                                                    Name = data.Name,
+                                                    Description = data.Description,
+                                                    ChannelId = textChannel.Id,
+                                                    MessageId = message.Id,
+                                                    ThreadId = thread.Id,
+                                                    DungeonMasterUserId = context.User.Id,
+                                                    DayOfWeek = selectedDay,
+                                                    Time = selectedTime
+                                                })
+                                .ConfigureAwait(false);
             }
         }
+    }
+
+    /// <summary>
+    /// Join session
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task JoinSession(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .JoinSession(new JoinSessionDTO
+                                     {
+                                         ChannelId = context.Channel.Id,
+                                         UserId = context.User.Id
+                                     })
+                        .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Leave session
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task LeaveSession(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .LeaveSession(new LeaveSessionDTO
+                                      {
+                                          ChannelId = context.Channel.Id,
+                                          UserId = context.User.Id
+                                      })
+                        .ConfigureAwait(false);
     }
 
     #endregion // Methods
