@@ -112,6 +112,30 @@ public class PenAndPaperController : ControllerBase
     }
 
     /// <summary>
+    /// Is the given user Dungeon Master of the campaign?
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("Campaigns/IsDungeonMaster/{channelId}/{userId}")]
+    public async Task<IActionResult> CreateContainer([FromRoute] ulong channelId, ulong userId)
+    {
+        if (await _mongoFactory.Create()
+                               .GetDatabase(_mongoFactory.Database)
+                               .GetCollection<CampaignEntity>("Campaigns")
+                               .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, channelId)
+                                   & Builders<CampaignEntity>.Filter.Eq(obj => obj.DungeonMasterUserId, userId))
+                               .AnyAsync()
+                               .ConfigureAwait(false))
+        {
+            return Ok();
+        }
+
+        return NotFound();
+    }
+
+    /// <summary>
     /// Get current session and campaign data
     /// </summary>
     /// <param name="channelId">Channel ID</param>

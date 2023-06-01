@@ -121,5 +121,25 @@ public sealed class WebApiConnector : ConnectorBase,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task<CurrentSessionDTO> IPenAndPaperConnector.GetCurrentSession(ulong channelId) => Get<CurrentSessionDTO>($"PenAndPaper/Sessions/Current/{channelId}");
 
+    /// <summary>
+    /// Is the given user Dungeon Master of the campaign?
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    async Task<bool> IPenAndPaperConnector.IsDungeonMaster(ulong channelId, ulong userId)
+    {
+        try
+        {
+            await Get($"PenAndPaper/Campaigns/IsDungeonMaster/{channelId}/{userId}").ConfigureAwait(false);
+
+            return true;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+    }
+
     #endregion // IPenAndPaperConnector
 }

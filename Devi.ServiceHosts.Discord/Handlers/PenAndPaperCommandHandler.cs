@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -68,7 +69,7 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
 
         foreach (var dayOfWeek in Enum.GetValues(typeof(DayOfWeek)).OfType<DayOfWeek>())
         {
-            if (LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(dayOfWeek).StartsWith(data.Day))
+            if (dayOfWeek.ToString().StartsWith(data.Day))
             {
                 selectedDay = dayOfWeek;
                 break;
@@ -151,6 +152,30 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
                                           UserId = context.User.Id
                                       })
                         .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Campaign configuration
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task CampaignSettings(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        if (await  _connector.PenAndPaper
+                             .IsDungeonMaster(context.Channel.Id, context.User.Id)
+                             .ConfigureAwait(false))
+        {
+            // TODO
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("OnlyDungeonMasterAllowed", "Only the Dungeon Master is allowed to use the configuration."),
+                                     ephemeral: true)
+                         .ConfigureAwait(false);
+        }
     }
 
     #endregion // Methods

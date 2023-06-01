@@ -36,4 +36,12 @@ public interface IPenAndPaperConnector
     /// <param name="channelId">Channel ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task<CurrentSessionDTO> GetCurrentSession(ulong channelId);
+
+    /// <summary>
+    /// Is the given user Dungeon Master of the campaign?
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task<bool> IsDungeonMaster(ulong channelId, ulong userId);
 }

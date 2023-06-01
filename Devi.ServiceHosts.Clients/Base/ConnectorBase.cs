@@ -78,6 +78,14 @@ public abstract class ConnectorBase
     /// <summary>
     /// Get
     /// </summary>
+    /// <param name="route">Route</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task Get(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Get, route, null, parameters);
+
+    /// <summary>
+    /// Get
+    /// </summary>
     /// <typeparam name="T">DTO type</typeparam>
     /// <param name="route">Route</param>
     /// <param name="parameters">parameters</param>
@@ -120,9 +128,9 @@ public abstract class ConnectorBase
             }
 
             var request = new HttpRequestMessage(method, BuildUri(route, parameters))
-            {
-                Content = content
-            };
+                          {
+                              Content = content
+                          };
 
             request.Content = content;
 
