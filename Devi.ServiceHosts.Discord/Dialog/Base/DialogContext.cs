@@ -39,6 +39,16 @@ public class DialogContext
     public List<IMessage> Messages { get; }
 
     /// <summary>
+    /// Should the responses be ephemeral?
+    /// </summary>
+    public bool UseEphemeralMessages { get; set; }
+
+    /// <summary>
+    /// Should the messages modify the current reply instead of posting new messages?
+    /// </summary>
+    public bool ModifyCurrentMessage { get; set; }
+
+    /// <summary>
     /// Set value
     /// </summary>
     /// <typeparam name="T">Type</typeparam>

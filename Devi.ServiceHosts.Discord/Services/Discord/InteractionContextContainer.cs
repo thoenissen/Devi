@@ -111,14 +111,16 @@ public sealed class InteractionContextContainer : LocatedServiceBase, IInteracti
     /// <summary>
     /// Response general processing message
     /// </summary>
+    /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<IUserMessage> DeferProcessing()
+    public async Task<IUserMessage> DeferProcessing(bool ephemeral)
     {
         try
         {
             _deferMessage = await SendMessageAsync(LocalizationGroup.GetFormattedText("Processing",
                                                                                       "{0} The action is being processed.",
-                                                                                      DiscordEmoteService.GetLoadingEmote(Client))).ConfigureAwait(false);
+                                                                                      DiscordEmoteService.GetLoadingEmote(Client)),
+                                                   ephemeral: ephemeral).ConfigureAwait(false);
 
             return _deferMessage;
         }
@@ -174,7 +176,16 @@ public sealed class InteractionContextContainer : LocatedServiceBase, IInteracti
     {
         try
         {
-            await _interaction.ModifyOriginalResponseAsync(action)
+            await _interaction.ModifyOriginalResponseAsync(obj =>
+                                                           {
+                                                               action(obj);
+
+                                                               if (obj.Embed is { IsSpecified: true, Value: null }
+                                                                && obj.Content is { IsSpecified: true, Value: null })
+                                                               {
+                                                                   obj.Content = "\u200b";
+                                                               }
+                                                           })
                               .ConfigureAwait(false);
         }
         catch (TimeoutException)

@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Devi.ServiceHosts.WebApi.Data.Entity.Collections.PenAndPaper;
@@ -43,4 +45,9 @@ public class CampaignEntity
     /// Dungeon master user ID
     /// </summary>
     public ulong DungeonMasterUserId { get; set; }
+
+    /// <summary>
+    /// Players
+    /// </summary>
+    public List<PlayerEntity> Players { get; set; }
 }

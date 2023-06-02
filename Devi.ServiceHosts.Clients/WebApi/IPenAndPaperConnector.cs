@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Devi.ServiceHosts.DTOs.PenAndPaper;
 
@@ -44,4 +45,12 @@ public interface IPenAndPaperConnector
     /// <param name="userId">User ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task<bool> IsDungeonMaster(ulong channelId, ulong userId);
+
+    /// <summary>
+    /// Set players of campaign
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="users">Users</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task SetPlayers(ulong channelId, List<ulong> users);
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel.Design;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -140,6 +139,19 @@ public sealed class WebApiConnector : ConnectorBase,
             return false;
         }
     }
+
+    /// <summary>
+    /// Set players of campaign
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="players">Players</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.SetPlayers(ulong channelId, List<ulong> players) => Post("PenAndPaper/Campaign/Players",
+                                                                                        new SetPlayersDTO
+                                                                                        {
+                                                                                            ChannelId = channelId,
+                                                                                            Players = players
+                                                                                        });
 
     #endregion // IPenAndPaperConnector
 }

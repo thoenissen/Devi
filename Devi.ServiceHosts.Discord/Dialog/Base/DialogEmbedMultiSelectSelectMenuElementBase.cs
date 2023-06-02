@@ -48,7 +48,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     /// Returns the select menu entries which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<SelectMenuOptionData> GetEntries() => null;
+    public virtual Task<IReadOnlyList<SelectMenuOptionData>> GetEntries() => Task.FromResult<IReadOnlyList<SelectMenuOptionData>>(null);
 
     /// <summary>
     /// Return the message of element
@@ -78,7 +78,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
                                                     .WithMinValues(MinValues)
                                                     .WithMaxValues(MaxValues);
 
-            var entries = GetEntries();
+            var entries = await GetEntries().ConfigureAwait(false);
             if (entries?.Count > 0)
             {
                 foreach (var entry in entries.Take(25))
@@ -87,12 +87,36 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
                 }
             }
 
+            if (MaxValues > selectMenu.Options.Count)
+            {
+                selectMenu.WithMaxValues(selectMenu.Options.Count);
+            }
+
             componentsBuilder.WithSelectMenu(selectMenu);
 
-            var message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(), components: componentsBuilder.Build())
+            IUserMessage message = null;
+
+            var embed = await GetMessage().ConfigureAwait(false);
+
+            if (DialogContext.ModifyCurrentMessage)
+            {
+                await CommandContext.ModifyOriginalResponseAsync(obj =>
+                                                                 {
+                                                                     obj.Content = string.Empty;
+                                                                     obj.Embed = embed.Build();
+                                                                     obj.Components = componentsBuilder.Build();
+                                                                 })
+                                              .ConfigureAwait(false);
+            }
+            else
+            {
+                message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(),
+                                                                components: componentsBuilder.Build(),
+                                                                ephemeral: DialogContext.UseEphemeralMessages)
                                               .ConfigureAwait(false);
 
-            DialogContext.Messages.Add(message);
+                DialogContext.Messages.Add(message);
+            }
 
             components.StartTimeout();
 
@@ -102,8 +126,16 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
             await component.DeferAsync()
                            .ConfigureAwait(false);
 
-            await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
-                         .ConfigureAwait(false);
+            if (message == null)
+            {
+                await CommandContext.ModifyOriginalResponseAsync(obj => obj.Components = new ComponentBuilder().Build())
+                                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
+                              .ConfigureAwait(false);
+            }
 
             var selectedEntries = new List<TData>();
 

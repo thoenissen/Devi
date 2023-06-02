@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Core.Localization;
@@ -82,10 +83,29 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
                 componentsBuilder.WithSelectMenu(selectMenu);
             }
 
-            var message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(), components: componentsBuilder.Build())
+            IUserMessage message = null;
+
+            var embed = await GetMessage().ConfigureAwait(false);
+
+            if (DialogContext.ModifyCurrentMessage)
+            {
+                await CommandContext.ModifyOriginalResponseAsync(obj =>
+                                                                 {
+                                                                     obj.Content = null;
+                                                                     obj.Embed = embed.Build();
+                                                                     obj.Components = componentsBuilder.Build();
+                                                                 })
+                                    .ConfigureAwait(false);
+            }
+            else
+            {
+                message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(),
+                                                                components: componentsBuilder.Build(),
+                                                                ephemeral: DialogContext.UseEphemeralMessages)
                                               .ConfigureAwait(false);
 
-            DialogContext.Messages.Add(message);
+                DialogContext.Messages.Add(message);
+            }
 
             string selectedValue = null;
 
@@ -108,8 +128,16 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
                                                                                .WithDisabled(true));
                 }
 
-                await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
-                             .ConfigureAwait(false);
+                if (message == null)
+                {
+                    await CommandContext.ModifyOriginalResponseAsync(obj => obj.Components = disabledComponentBuilder.Build())
+                                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
+                                 .ConfigureAwait(false);
+                }
             }
 
             components.StartTimeout();

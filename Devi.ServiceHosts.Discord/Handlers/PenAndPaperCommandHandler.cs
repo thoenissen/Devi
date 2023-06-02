@@ -8,6 +8,8 @@ using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Commands.Modals.Data;
+using Devi.ServiceHosts.Discord.Dialog.Base;
+using Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
 
@@ -161,14 +163,30 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CampaignSettings(InteractionContextContainer context)
     {
-        await context.DeferAsync()
+        await context.DeferProcessing(true)
                      .ConfigureAwait(false);
 
         if (await  _connector.PenAndPaper
                              .IsDungeonMaster(context.Channel.Id, context.User.Id)
                              .ConfigureAwait(false))
         {
-            // TODO
+            using (var dialogHandler = new DialogHandler(context))
+            {
+                dialogHandler.DialogContext.UseEphemeralMessages = true;
+                dialogHandler.DialogContext.ModifyCurrentMessage = true;
+
+                bool restartDialog;
+
+                do
+                {
+                    restartDialog = await dialogHandler.Run<CampaignSettingsSelectionDialogElement, bool>()
+                                                       .ConfigureAwait(false);
+                }
+                while (restartDialog);
+            }
+
+            await context.DeleteOriginalResponse()
+                         .ConfigureAwait(false);
         }
         else
         {

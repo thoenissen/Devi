@@ -14,6 +14,8 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace Devi.ServiceHosts.WebApi.Controllers;
 
 /// <summary>
@@ -107,6 +109,31 @@ public class PenAndPaperController : ControllerBase
                                                            ChannelId = data.ChannelId,
                                                        })
                                .ConfigureAwait(false);
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Set campaign players
+    /// </summary>
+    /// <param name="data">Players</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Campaign/Players")]
+    public async Task<IActionResult> SetPlayers([FromBody] SetPlayersDTO data)
+    {
+        await _mongoFactory.Create()
+                           .GetDatabase(_mongoFactory.Database)
+                           .GetCollection<CampaignEntity>("Campaigns")
+                           .UpdateOneAsync(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId),
+                                           Builders<CampaignEntity>.Update.Set(obj => obj.Players,
+                                                                               data.Players
+                                                                                   .Select(obj => new PlayerEntity
+                                                                                                  {
+                                                                                                      UserId = obj
+                                                                                                  })
+                                                                                   .ToList()))
+                                                                   .ConfigureAwait(false);
 
         return Ok();
     }
