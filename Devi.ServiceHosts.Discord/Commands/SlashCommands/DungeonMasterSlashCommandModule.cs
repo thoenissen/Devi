@@ -33,5 +33,15 @@ public class DungeonMasterSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("create-campaign", "Campaign creation")]
     public Task CreateCampaign() => CommandHandler.CreateCampaign(Context);
 
+    /// <summary>
+    /// Session creation
+    /// </summary>
+    /// <param name="date">Date</param>
+    /// <param name="time">Time</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("create-session", "Session creation")]
+    public Task CreateSession([Summary("Date", "Date [dd.mm.yyyy]")]string date,
+                              [Summary("Time", "Time [hh:mm]")]string time) => CommandHandler.CreateSession(Context, date, time);
+
     #endregion // Methods
 }

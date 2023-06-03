@@ -56,7 +56,14 @@ public sealed class DiscordConnector : ConnectorBase,
     /// </summary>
     /// <param name="dto">Data</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task IPenAndPaperConnector.RefreshCampaignMessage(RefreshCampaignMessageDTO dto) => Post("PenAndPaper/Campaign/refreshMessage", dto);
+    Task IPenAndPaperConnector.RefreshCampaignMessage(RefreshCampaignMessageDTO dto) => Post("PenAndPaper/Campaigns/refreshMessage", dto);
+
+    /// <summary>
+    /// Refresh session message
+    /// </summary>
+    /// <param name="dto">Data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task IPenAndPaperConnector.RefreshSessionMessage(RefreshSessionMessageDTO dto) => Post("PenAndPaper/Sessions/refreshMessage", dto);
 
     #endregion // Methods
 }

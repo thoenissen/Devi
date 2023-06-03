@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -119,44 +117,6 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Join session
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task JoinSession(InteractionContextContainer context)
-    {
-        await context.DeferAsync()
-                     .ConfigureAwait(false);
-
-        await _connector.PenAndPaper
-                        .JoinSession(new JoinSessionDTO
-                                     {
-                                         ChannelId = context.Channel.Id,
-                                         UserId = context.User.Id
-                                     })
-                        .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Leave session
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task LeaveSession(InteractionContextContainer context)
-    {
-        await context.DeferAsync()
-                     .ConfigureAwait(false);
-
-        await _connector.PenAndPaper
-                        .LeaveSession(new LeaveSessionDTO
-                                      {
-                                          ChannelId = context.Channel.Id,
-                                          UserId = context.User.Id
-                                      })
-                        .ConfigureAwait(false);
-    }
-
-    /// <summary>
     /// Campaign configuration
     /// </summary>
     /// <param name="context">Command context</param>
@@ -194,6 +154,70 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
                                      ephemeral: true)
                          .ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    /// Session creation
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="date">Date</param>
+    /// <param name="time">Time</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task CreateSession(InteractionContextContainer context, string date, string time)
+    {
+        if (DateTime.TryParseExact($"{date}_{time}", "dd.MM.yyyy_HH:mm", null, System.Globalization.DateTimeStyles.None, out var timeStamp))
+        {
+            await context.DeferProcessing(true)
+                         .ConfigureAwait(false);
+
+            var message = await context.Channel.SendMessageAsync(LocalizationGroup.GetFormattedText("SessionCreation", "{0} The session is being created.", DiscordEmoteService.GetLoadingEmote(context.Client)))
+                                       .ConfigureAwait(false);
+
+            await _connector.PenAndPaper
+                            .CreateSession(context.Channel.Id, message.Id, timeStamp)
+                            .ConfigureAwait(false);
+
+            await context.DeleteOriginalResponse()
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Join session
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task JoinSession(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .JoinSession(new JoinSessionDTO
+                                     {
+                                         MessageId = context.Message.Id,
+                                         UserId = context.User.Id
+                                     })
+                        .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Leave session
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task LeaveSession(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .LeaveSession(new LeaveSessionDTO
+                                      {
+                                          MessageId = context.Message.Id,
+                                          UserId = context.User.Id
+                                      })
+                        .ConfigureAwait(false);
     }
 
     #endregion // Methods

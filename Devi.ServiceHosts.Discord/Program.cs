@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.WebApi;
-using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Dialog.Base;
 using Devi.ServiceHosts.Discord.Services.Discord;

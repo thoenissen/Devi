@@ -28,6 +28,11 @@ public class SessionEntity
     public DateTime TimeStamp { get; set; }
 
     /// <summary>
+    /// Message ID
+    /// </summary>
+    public ulong MessageId { get; set; }
+
+    /// <summary>
     /// Registrations
     /// </summary>
     public List<SessionRegistrationEntity> Registrations { get; set; }

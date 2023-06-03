@@ -101,6 +101,21 @@ public sealed class WebApiConnector : ConnectorBase,
     Task IPenAndPaperConnector.CreateCampaign(CreateCampaignDTO dto) => Post("PenAndPaper/Campaigns", dto);
 
     /// <summary>
+    /// Create session
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="messageId">Message ID</param>
+    /// <param name="timeStamp">Time stamp</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.CreateSession(ulong channelId, ulong messageId, DateTime timeStamp) => Post("PenAndPaper/Sessions",
+                                                                                                           new CreateSessionDTO
+                                                                                                           {
+                                                                                                               ChannelId = channelId,
+                                                                                                               MessageId = messageId,
+                                                                                                               TimeStamp = timeStamp
+                                                                                                           });
+
+    /// <summary>
     /// Join session
     /// </summary>
     /// <param name="dto">Join data</param>
@@ -183,6 +198,13 @@ public sealed class WebApiConnector : ConnectorBase,
                                                                                             ChannelId = channelId,
                                                                                             UserId = userId
                                                                                         });
+
+    /// <summary>
+    /// Get session
+    /// </summary>
+    /// <param name="messageId">Message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task<SessionDTO> IPenAndPaperConnector.GetSession(ulong messageId) => Get<SessionDTO>($"PenAndPaper/Sessions/{messageId}");
 
     #endregion // IPenAndPaperConnector
 }

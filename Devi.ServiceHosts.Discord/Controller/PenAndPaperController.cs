@@ -6,7 +6,6 @@ using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
-using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Discord;
 
@@ -57,13 +56,13 @@ public class PenAndPaperController : LocatedControllerBase
     #region Methods
 
     /// <summary>
-    /// Post reminder message
+    /// Refresh campaign overview message
     /// </summary>
     /// <param name="dto">Data</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
-    [Route("Campaign/refreshMessage")]
-    public async Task<IActionResult> PostReminderMessage([FromBody] RefreshCampaignMessageDTO dto)
+    [Route("Campaigns/refreshMessage")]
+    public async Task<IActionResult> RefreshCampaignMessage([FromBody] RefreshCampaignMessageDTO dto)
     {
         var session = await _connector.PenAndPaper
                                       .GetCampaignOverview(dto.ChannelId)
@@ -112,6 +111,60 @@ public class PenAndPaperController : LocatedControllerBase
 
                 var components = new ComponentBuilder().WithButton(LocalizationGroup.GetText("Settings", "⚙️"), "pnp;campaign;settings", ButtonStyle.Secondary)
                                                        .WithButton(LocalizationGroup.GetText("Log", "Log"), null, ButtonStyle.Link, null, $"https://discord.com/channels/{channel.GuildId}/{session.ThreadId}/");
+
+                await message.ModifyAsync(obj =>
+                                          {
+                                              obj.Content = null;
+                                              obj.Embed = embed.Build();
+                                              obj.Components = components.Build();
+                                          })
+                             .ConfigureAwait(false);
+            }
+        }
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Refresh session message
+    /// </summary>
+    /// <param name="dto">Data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Sessions/refreshMessage")]
+    public async Task<IActionResult> RefreshSessionMessage([FromBody] RefreshSessionMessageDTO dto)
+    {
+        var session = await _connector.PenAndPaper
+                                      .GetSession(dto.MessageId)
+                                      .ConfigureAwait(false);
+
+        if (await _discordClient.Client.GetChannelAsync(session.ChannelId).ConfigureAwait(false) is ITextChannel channel)
+        {
+            if (await channel.GetMessageAsync(dto.MessageId).ConfigureAwait(false) is IUserMessage message)
+            {
+                var registrations = new StringBuilder();
+
+                if (session.Registrations?.Count > 0)
+                {
+                    foreach (var registration in session.Registrations)
+                    {
+                        registrations.AppendLine($"> {(registration.IsRegistered ? DiscordEmoteService.GetCheckEmote(_discordClient.Client) : DiscordEmoteService.GetCrossEmote(_discordClient.Client))} <@{registration.UserId}>");
+                    }
+                }
+
+                if (registrations.Length == 0)
+                {
+                    registrations.Append("> \u200b");
+                }
+
+                var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("SessionTitle", "Session {0:g}", session.TimeStamp))
+                                              .AddField(LocalizationGroup.GetText("Registrations", "Registrations"), registrations.ToString())
+                                              .WithTimestamp(DateTimeOffset.Now)
+                                              .WithColor(Color.DarkGreen)
+                                              .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64");
+
+                var components = new ComponentBuilder().WithButton(LocalizationGroup.GetText("Join", "Join"), "pnp;session;join", ButtonStyle.Secondary)
+                                                       .WithButton(LocalizationGroup.GetText("Leave", "Leave"), "pnp;session;leave", ButtonStyle.Secondary);
 
                 await message.ModifyAsync(obj =>
                                           {

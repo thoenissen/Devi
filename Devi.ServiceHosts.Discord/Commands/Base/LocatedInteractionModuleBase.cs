@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-using Devi.ServiceHosts.Core.Localization;
+﻿using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Services.Discord;
 
 using Discord.Interactions;

@@ -1,17 +1,12 @@
 ﻿namespace Devi.ServiceHosts.DTOs.PenAndPaper;
 
 /// <summary>
-/// Leave session
+/// Refresh session message
 /// </summary>
-public class LeaveSessionDTO
+public class RefreshSessionMessageDTO
 {
     /// <summary>
-    /// Channel ID
+    /// Message ID
     /// </summary>
     public ulong MessageId { get; set; }
-
-    /// <summary>
-    /// User ID
-    /// </summary>
-    public ulong UserId { get; set; }
 }

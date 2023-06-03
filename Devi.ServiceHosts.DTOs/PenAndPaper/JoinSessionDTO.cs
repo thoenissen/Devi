@@ -8,7 +8,7 @@ public class JoinSessionDTO
     /// <summary>
     /// Channel ID
     /// </summary>
-    public ulong ChannelId { get; set; }
+    public ulong MessageId { get; set; }
 
     /// <summary>
     /// User ID

@@ -8,13 +8,14 @@ using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Data.Entity.Collections.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Services;
 
+using Docker.DotNet.Models;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Devi.ServiceHosts.WebApi.Controllers;
 
@@ -282,6 +283,100 @@ public class PenAndPaperController : ControllerBase
     }
 
     /// <summary>
+    /// Create session
+    /// </summary>
+    /// <param name="data">Data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Sessions")]
+    public async Task<IActionResult> CreateContainer([FromBody] CreateSessionDTO data)
+    {
+        var campaign = await _mongoFactory.Create()
+                                          .GetDatabase(_mongoFactory.Database)
+                                          .GetCollection<CampaignEntity>("Campaigns")
+                                          .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId))
+                                          .Project(obj => new
+                                                          {
+                                                              obj.Id,
+                                                              obj.Players
+                                                          })
+                                          .FirstAsync()
+                                            .ConfigureAwait(false);
+        await _mongoFactory.Create()
+                           .GetDatabase(_mongoFactory.Database)
+                           .GetCollection<SessionEntity>("Sessions")
+                           .InsertOneAsync(new SessionEntity
+                                           {
+                                               Id = ObjectId.GenerateNewId(),
+                                               CampaignId = campaign.Id,
+                                               MessageId = data.MessageId,
+                                               TimeStamp = data.TimeStamp,
+                                               Registrations = campaign.Players
+                                                                       .Select(obj => new SessionRegistrationEntity
+                                                                                      {
+                                                                                          UserId = obj.UserId,
+                                                                                          IsRegistered = true
+                                                                                      })
+                                                                       .ToList()
+                                           })
+                           .ConfigureAwait(false);
+
+        await _discordConnector.PenAndPaper
+                               .RefreshSessionMessage(new RefreshSessionMessageDTO
+                                                      {
+                                                          MessageId = data.MessageId
+                                                      })
+                               .ConfigureAwait(false);
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// GetSession
+    /// </summary>
+    /// <param name="messageId">Message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("Sessions/{messageId}")]
+    public async Task<IActionResult> GetSession([FromRoute] ulong messageId)
+    {
+        var database = _mongoFactory.Create()
+                                    .GetDatabase(_mongoFactory.Database);
+
+        var campaignsCollection = database.GetCollection<CampaignEntity>("Campaigns");
+
+        var session = await database.GetCollection<SessionEntity>("Sessions")
+                                    .Aggregate()
+                                    .Match(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, messageId))
+                                    .Lookup<SessionEntity, CampaignEntity, SessionWithCampaignEntity>(campaignsCollection,
+                                            obj => obj.CampaignId,
+                                            obj => obj.Id,
+                                            obj => obj.Campaign)
+                                    .Unwind<SessionWithCampaignEntity, SessionWithCampaignEntity>(obj => obj.Campaign)
+                                    .Project(obj => new
+                                                    {
+                                                        obj.Campaign.ChannelId,
+                                                        obj.TimeStamp,
+                                                        obj.Registrations,
+                                                    })
+                                    .FirstAsync()
+                                    .ConfigureAwait(false);
+
+        return Ok(new SessionDTO
+                  {
+                      ChannelId = session.ChannelId,
+                      TimeStamp = session.TimeStamp,
+                      Registrations = session.Registrations
+                                             .Select(obj => new SessionRegistrationDTO
+                                                            {
+                                                                UserId = obj.UserId,
+                                                                IsRegistered = obj.IsRegistered,
+                                                            })
+                                             .ToList()
+                  });
+    }
+
+    /// <summary>
     /// Join session
     /// </summary>
     /// <param name="data">Data</param>
@@ -290,19 +385,10 @@ public class PenAndPaperController : ControllerBase
     [Route("Sessions/Registration")]
     public async Task<IActionResult> CreateContainer([FromBody] JoinSessionDTO data)
     {
-        var campaignId = await _mongoFactory.Create()
-                                            .GetDatabase(_mongoFactory.Database)
-                                            .GetCollection<CampaignEntity>("Campaigns")
-                                            .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId))
-                                            .Project(obj => obj.Id)
-                                            .FirstAsync()
-                                            .ConfigureAwait(false);
-
         var result = await _mongoFactory.Create()
                                         .GetDatabase(_mongoFactory.Database)
                                         .GetCollection<SessionEntity>("Sessions")
-                                        .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.CampaignId, campaignId)
-                                                      & Builders<SessionEntity>.Filter.Gt(obj => obj.TimeStamp, DateTime.Now)
+                                        .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId)
                                                       & Builders<SessionEntity>.Filter.ElemMatch(obj => obj.Registrations, Builders<SessionRegistrationEntity>.Filter.Eq(obj => obj.UserId, data.UserId)),
                                                         Builders<SessionEntity>.Update.Set(obj => obj.Registrations.FirstMatchingElement().IsRegistered, true))
                                         .ConfigureAwait(false);
@@ -312,7 +398,7 @@ public class PenAndPaperController : ControllerBase
             await _mongoFactory.Create()
                                .GetDatabase(_mongoFactory.Database)
                                .GetCollection<SessionEntity>("Sessions")
-                               .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.CampaignId, campaignId),
+                               .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId),
                                                Builders<SessionEntity>.Update.Push(obj => obj.Registrations,
                                                                                    new SessionRegistrationEntity
                                                                                    {
@@ -323,9 +409,9 @@ public class PenAndPaperController : ControllerBase
         }
 
         await _discordConnector.PenAndPaper
-                               .RefreshCampaignMessage(new RefreshCampaignMessageDTO
+                               .RefreshSessionMessage(new RefreshSessionMessageDTO
                                                        {
-                                                           ChannelId = data.ChannelId,
+                                                           MessageId = data.MessageId,
                                                        })
                                .ConfigureAwait(false);
 
@@ -341,19 +427,10 @@ public class PenAndPaperController : ControllerBase
     [Route("Sessions/Registration")]
     public async Task<IActionResult> CreateContainer([FromBody] LeaveSessionDTO data)
     {
-        var campaignId = await _mongoFactory.Create()
-                                            .GetDatabase(_mongoFactory.Database)
-                                            .GetCollection<CampaignEntity>("Campaigns")
-                                            .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId))
-                                            .Project(obj => obj.Id)
-                                            .FirstAsync()
-                                            .ConfigureAwait(false);
-
         var result = await _mongoFactory.Create()
                                         .GetDatabase(_mongoFactory.Database)
                                         .GetCollection<SessionEntity>("Sessions")
-                                        .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.CampaignId, campaignId)
-                                                      & Builders<SessionEntity>.Filter.Gt(obj => obj.TimeStamp, DateTime.Now)
+                                        .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId)
                                                       & Builders<SessionEntity>.Filter.ElemMatch(obj => obj.Registrations, Builders<SessionRegistrationEntity>.Filter.Eq(obj => obj.UserId, data.UserId)),
                                                         Builders<SessionEntity>.Update.Set(obj => obj.Registrations.FirstMatchingElement().IsRegistered, false))
                                         .ConfigureAwait(false);
@@ -363,7 +440,7 @@ public class PenAndPaperController : ControllerBase
             await _mongoFactory.Create()
                                .GetDatabase(_mongoFactory.Database)
                                .GetCollection<SessionEntity>("Sessions")
-                               .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.CampaignId, campaignId),
+                               .UpdateOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId),
                                                Builders<SessionEntity>.Update.Push(obj => obj.Registrations,
                                                                                    new SessionRegistrationEntity
                                                                                    {
@@ -374,9 +451,9 @@ public class PenAndPaperController : ControllerBase
         }
 
         await _discordConnector.PenAndPaper
-                               .RefreshCampaignMessage(new RefreshCampaignMessageDTO
+                               .RefreshSessionMessage(new RefreshSessionMessageDTO
                                                        {
-                                                           ChannelId = data.ChannelId,
+                                                           MessageId = data.MessageId,
                                                        })
                                .ConfigureAwait(false);
         return Ok();

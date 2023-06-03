@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.DTOs.PenAndPaper;
@@ -17,6 +18,15 @@ public interface IPenAndPaperConnector
     /// <param name="dto">Campaign data</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task CreateCampaign(CreateCampaignDTO dto);
+
+    /// <summary>
+    /// Create session
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="messageId">Message ID</param>
+    /// <param name="timeStamp">Time stamp</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task CreateSession(ulong channelId, ulong messageId, DateTime timeStamp);
 
     /// <summary>
     /// Join session
@@ -72,4 +82,11 @@ public interface IPenAndPaperConnector
     /// <param name="userId">User ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task RemoveCharacter(ulong channelId, ulong userId);
+
+    /// <summary>
+    /// Get session
+    /// </summary>
+    /// <param name="messageId">Message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task<SessionDTO> GetSession(ulong messageId);
 }

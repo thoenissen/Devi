@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 
 using Devi.ServiceHosts.WebApi.Data.Entity.Tables.Reminders;
@@ -72,7 +71,7 @@ public class DbContext : Microsoft.EntityFrameworkCore.DbContext
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-        optionsBuilder.LogTo(s => Debug.WriteLine(s));
+        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
 #endif
         base.OnConfiguring(optionsBuilder);
     }
