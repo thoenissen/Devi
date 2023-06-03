@@ -6,7 +6,7 @@ namespace Devi.ServiceHosts.DTOs.PenAndPaper;
 /// <summary>
 /// Current session data
 /// </summary>
-public class CurrentSessionDTO
+public class CampaignOverviewDTO
 {
     /// <summary>
     /// Name
@@ -34,12 +34,7 @@ public class CurrentSessionDTO
     public ulong DungeonMasterUserId { get; set; }
 
     /// <summary>
-    /// Time stamp
+    /// Players
     /// </summary>
-    public DateTime? SessionTimeStamp { get; set; }
-
-    /// <summary>
-    /// Registrations
-    /// </summary>
-    public List<SessionRegistrationDTO> Registrations { get; set; }
+    public List<PlayerDTO> Players { get; set; }
 }

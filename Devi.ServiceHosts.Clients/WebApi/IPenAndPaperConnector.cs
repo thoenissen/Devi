@@ -32,11 +32,11 @@ public interface IPenAndPaperConnector
     Task LeaveSession(LeaveSessionDTO dto);
 
     /// <summary>
-    /// Get current session
+    /// Get campaign overview
     /// </summary>
     /// <param name="channelId">Channel ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    Task<CurrentSessionDTO> GetCurrentSession(ulong channelId);
+    Task<CampaignOverviewDTO> GetCampaignOverview(ulong channelId);
 
     /// <summary>
     /// Is the given user Dungeon Master of the campaign?

@@ -2,6 +2,7 @@
 
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Discord;
 using Discord.Interactions;
@@ -29,9 +30,12 @@ public class PlayerSlashCommandModule : SlashCommandModuleBase
     /// <summary>
     /// Create character
     /// </summary>
+    /// <param name="characterName">Name</param>
+    /// <param name="characterClass">Class</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("create-character", "Character creation")]
-    public Task AddCharacter() => CommandHandler.AddCharacter(Context);
+    public Task AddCharacter([Summary("Name")] string characterName,
+                             [Summary("Class")] Class characterClass) => CommandHandler.AddCharacter(Context);
 
     /// <summary>
     /// Remove character

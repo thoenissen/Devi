@@ -82,6 +82,97 @@ public static class DiscordEmoteService
     public static IEmote GetCrossEmote(IDiscordClient client) => GetEmote(client, "Cross");
 
     /// <summary>
+    /// Get 'Artificer'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetArtificerEmote(IDiscordClient client) => GetEmote(client, "Artificer");
+
+    /// <summary>
+    /// Get 'Barbarian'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetBarbarianEmote(IDiscordClient client) => GetEmote(client, "Barbarian");
+
+    /// <summary>
+    /// Get 'Bard'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetBardEmote(IDiscordClient client) => GetEmote(client, "Bard");
+
+    /// <summary>
+    /// Get 'Druid'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetDruidEmote(IDiscordClient client) => GetEmote(client, "Druid");
+
+    /// <summary>
+    /// Get 'Fighter'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetFighterEmote(IDiscordClient client) => GetEmote(client, "Fighter");
+
+    /// <summary>
+    /// Get 'Gunslinger'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetGunslingerEmote(IDiscordClient client) => GetEmote(client, "Gunslinger");
+
+    /// <summary>
+    /// Get 'Monk'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetMonkEmote(IDiscordClient client) => GetEmote(client, "Monk");
+
+    /// <summary>
+    /// Get 'Paladin'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetPaladinEmote(IDiscordClient client) => GetEmote(client, "Paladin");
+
+    /// <summary>
+    /// Get 'Ranger'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetRangerEmote(IDiscordClient client) => GetEmote(client, "Ranger");
+
+    /// <summary>
+    /// Get 'Rogue'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetRogueEmote(IDiscordClient client) => GetEmote(client, " Rogue");
+
+    /// <summary>
+    /// Get 'Sorcerer'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetSorcererEmote(IDiscordClient client) => GetEmote(client, "Sorcerer");
+
+    /// <summary>
+    /// Get 'Warlock'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetWarlockEmote(IDiscordClient client) => GetEmote(client, "Warlock");
+
+    /// <summary>
+    /// Get 'Wizard'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetWizardEmote(IDiscordClient client) => GetEmote(client, "Wizard");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>
@@ -113,7 +204,7 @@ public static class DiscordEmoteService
     /// <param name="client">Discord client</param>
     /// <param name="key">key</param>
     /// <returns>Emote</returns>
-    private static IEmote GetEmote(IDiscordClient client, string key)
+    public static IEmote GetEmote(IDiscordClient client, string key)
     {
         IEmote emote = null;
 

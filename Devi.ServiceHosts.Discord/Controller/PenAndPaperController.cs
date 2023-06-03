@@ -6,6 +6,7 @@ using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Discord;
 
@@ -65,31 +66,46 @@ public class PenAndPaperController : LocatedControllerBase
     public async Task<IActionResult> PostReminderMessage([FromBody] RefreshCampaignMessageDTO dto)
     {
         var session = await _connector.PenAndPaper
-                                      .GetCurrentSession(dto.ChannelId)
+                                      .GetCampaignOverview(dto.ChannelId)
                                       .ConfigureAwait(false);
 
         if (await _discordClient.Client.GetChannelAsync(dto.ChannelId).ConfigureAwait(false) is ITextChannel channel)
         {
             if (await channel.GetMessageAsync(session.MessageId).ConfigureAwait(false) is IUserMessage message)
             {
-                var sessionRegistrations = new StringBuilder();
+                var players = new StringBuilder();
 
-                if (session.Registrations?.Count > 0)
+                if (session.Players?.Count > 0)
                 {
-                    foreach (var registration in session.Registrations)
+                    foreach (var player in session.Players)
                     {
-                        sessionRegistrations.AppendLine($"> {(registration.IsRegistered ? DiscordEmoteService.GetCheckEmote(_discordClient.Client) : DiscordEmoteService.GetCrossEmote(_discordClient.Client))} <@{registration.UserId}>");
+                        players.Append("> ");
+                        players.Append(_discordClient.Client.GetUser(player.UserId).Mention);
+                        players.Append(' ');
+
+                        if (player.Class != null)
+                        {
+                            players.Append(DiscordEmoteService.GetEmote(_discordClient.Client, player.Class.ToString()));
+                            players.Append(' ');
+                        }
+
+                        if (player.CharacterName != null)
+                        {
+                            players.Append(player.CharacterName);
+                        }
+
+                        players.Append(Environment.NewLine);
                     }
                 }
 
-                if (sessionRegistrations.Length == 0)
+                if (players.Length == 0)
                 {
-                    sessionRegistrations.Append("> \u200b");
+                    players.Append("> \u200b");
                 }
 
                 var embed = new EmbedBuilder().WithTitle(session.Name)
                                               .WithDescription(LocalizationGroup.GetFormattedText("Description", "{0}\n\n**DM:** <@{1}>", session.Description, session.DungeonMasterUserId))
-                                              .AddField(LocalizationGroup.GetFormattedText("Session", "Session {0:g}", session.SessionTimeStamp), sessionRegistrations.ToString())
+                                              .AddField(LocalizationGroup.GetText("Players", "Players"), players.ToString())
                                               .WithTimestamp(DateTimeOffset.Now)
                                               .WithColor(Color.DarkGreen)
                                               .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64");

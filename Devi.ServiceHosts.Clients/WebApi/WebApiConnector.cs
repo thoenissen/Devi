@@ -114,11 +114,11 @@ public sealed class WebApiConnector : ConnectorBase,
     Task IPenAndPaperConnector.LeaveSession(LeaveSessionDTO dto) => Delete("PenAndPaper/Sessions/Registration", dto);
 
     /// <summary>
-    /// Get current session
+    /// Get campaign overview
     /// </summary>
     /// <param name="channelId">Channel ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    Task<CurrentSessionDTO> IPenAndPaperConnector.GetCurrentSession(ulong channelId) => Get<CurrentSessionDTO>($"PenAndPaper/Sessions/Current/{channelId}");
+    Task<CampaignOverviewDTO> IPenAndPaperConnector.GetCampaignOverview(ulong channelId) => Get<CampaignOverviewDTO>($"PenAndPaper/Campaigns/{channelId}/Overview");
 
     /// <summary>
     /// Is the given user Dungeon Master of the campaign?
@@ -130,7 +130,7 @@ public sealed class WebApiConnector : ConnectorBase,
     {
         try
         {
-            await Get($"PenAndPaper/Campaigns/IsDungeonMaster/{channelId}/{userId}").ConfigureAwait(false);
+            await Get($"PenAndPaper/Campaigns/{channelId}/IsDungeonMaster/{userId}").ConfigureAwait(false);
 
             return true;
         }
