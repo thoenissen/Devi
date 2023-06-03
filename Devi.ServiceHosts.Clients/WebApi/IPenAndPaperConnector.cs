@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 namespace Devi.ServiceHosts.Clients.WebApi;
 
@@ -53,4 +54,22 @@ public interface IPenAndPaperConnector
     /// <param name="users">Users</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task SetPlayers(ulong channelId, List<ulong> users);
+
+    /// <summary>
+    /// Add character
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <param name="characterName">Character name</param>
+    /// <param name="characterClass">Character class</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task AddCharacter(ulong channelId, ulong userId, string characterName, Class characterClass);
+
+    /// <summary>
+    /// Remove character
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task RemoveCharacter(ulong channelId, ulong userId);
 }

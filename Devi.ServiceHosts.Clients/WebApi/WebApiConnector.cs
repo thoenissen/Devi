@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.Docker;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 using Devi.ServiceHosts.DTOs.Reminders;
 
 namespace Devi.ServiceHosts.Clients.WebApi;
@@ -146,11 +147,41 @@ public sealed class WebApiConnector : ConnectorBase,
     /// <param name="channelId">Channel ID</param>
     /// <param name="players">Players</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    Task IPenAndPaperConnector.SetPlayers(ulong channelId, List<ulong> players) => Post("PenAndPaper/Campaign/Players",
+    Task IPenAndPaperConnector.SetPlayers(ulong channelId, List<ulong> players) => Post("PenAndPaper/Campaigns/Players",
                                                                                         new SetPlayersDTO
                                                                                         {
                                                                                             ChannelId = channelId,
                                                                                             Players = players
+                                                                                        });
+
+    /// <summary>
+    /// Add character
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <param name="characterName">Character name</param>
+    /// <param name="characterClass">Character class</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.AddCharacter(ulong channelId, ulong userId, string characterName, Class characterClass) => Post("PenAndPaper/Campaigns/Characters",
+                                                                                                                               new AddCharacterDTO
+                                                                                                                               {
+                                                                                                                                   ChannelId = channelId,
+                                                                                                                                   UserId = userId,
+                                                                                                                                   CharacterName = characterName,
+                                                                                                                                   CharacterClass = characterClass
+                                                                                                                               });
+
+    /// <summary>
+    /// Remove character
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.RemoveCharacter(ulong channelId, ulong userId) => Delete("PenAndPaper/Campaigns/Characters",
+                                                                                        new AddCharacterDTO
+                                                                                        {
+                                                                                            ChannelId = channelId,
+                                                                                            UserId = userId
                                                                                         });
 
     #endregion // IPenAndPaperConnector

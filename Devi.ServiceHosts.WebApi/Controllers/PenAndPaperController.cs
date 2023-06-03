@@ -119,7 +119,7 @@ public class PenAndPaperController : ControllerBase
     /// <param name="data">Players</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
-    [Route("Campaign/Players")]
+    [Route("Campaigns/Players")]
     public async Task<IActionResult> SetPlayers([FromBody] SetPlayersDTO data)
     {
         await _mongoFactory.Create()
@@ -135,6 +135,81 @@ public class PenAndPaperController : ControllerBase
                                                                                    .ToList()))
                                                                    .ConfigureAwait(false);
 
+        await _discordConnector.PenAndPaper
+                               .RefreshCampaignMessage(new RefreshCampaignMessageDTO
+                                                       {
+                                                           ChannelId = data.ChannelId
+                                                       })
+                               .ConfigureAwait(false);
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Add character
+    /// </summary>
+    /// <param name="data">Character</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Campaigns/Characters")]
+    public async Task<IActionResult> AddCharacter([FromBody] AddCharacterDTO data)
+    {
+        var result = await _mongoFactory.Create()
+                                        .GetDatabase(_mongoFactory.Database)
+                                        .GetCollection<CampaignEntity>("Campaigns")
+                                        .UpdateOneAsync(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId)
+                                                      & Builders<CampaignEntity>.Filter.ElemMatch(obj => obj.Players, Builders<PlayerEntity>.Filter.Eq(obj => obj.UserId, data.UserId)),
+                                                        Builders<CampaignEntity>.Update
+                                                                                .Set(obj => obj.Players.FirstMatchingElement().CharacterName, data.CharacterName)
+                                                                                .Set(obj => obj.Players.FirstMatchingElement().Class, data.CharacterClass))
+                                        .ConfigureAwait(false);
+
+        if (result.MatchedCount == 0)
+        {
+            return BadRequest();
+        }
+
+        await _discordConnector.PenAndPaper
+                               .RefreshCampaignMessage(new RefreshCampaignMessageDTO
+                                                       {
+                                                           ChannelId = data.ChannelId
+                                                       })
+                               .ConfigureAwait(false);
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Remove character
+    /// </summary>
+    /// <param name="data">Character</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpDelete]
+    [Route("Campaigns/Characters")]
+    public async Task<IActionResult> RemoveCharacter([FromBody] RemoveCharacterDTO data)
+    {
+        var result = await _mongoFactory.Create()
+                                        .GetDatabase(_mongoFactory.Database)
+                                        .GetCollection<CampaignEntity>("Campaigns")
+                                        .UpdateOneAsync(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId)
+                                                      & Builders<CampaignEntity>.Filter.ElemMatch(obj => obj.Players, Builders<PlayerEntity>.Filter.Eq(obj => obj.UserId, data.UserId)),
+                                                        Builders<CampaignEntity>.Update
+                                                                                .Set(obj => obj.Players.FirstMatchingElement().CharacterName, null)
+                                                                                .Set(obj => obj.Players.FirstMatchingElement().Class, null))
+                                        .ConfigureAwait(false);
+
+        if (result.MatchedCount == 0)
+        {
+            return BadRequest();
+        }
+
+        await _discordConnector.PenAndPaper
+                               .RefreshCampaignMessage(new RefreshCampaignMessageDTO
+                                                       {
+                                                           ChannelId = data.ChannelId
+                                                       })
+                               .ConfigureAwait(false);
+
         return Ok();
     }
 
@@ -145,7 +220,7 @@ public class PenAndPaperController : ControllerBase
     /// <param name="userId">User ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
-    [Route("Campaigns/IsDungeonMaster/{channelId}/{userId}")]
+    [Route("Campaigns/{channelId}/IsDungeonMaster/{userId}")]
     public async Task<IActionResult> CreateContainer([FromRoute] ulong channelId, ulong userId)
     {
         if (await _mongoFactory.Create()
@@ -163,12 +238,12 @@ public class PenAndPaperController : ControllerBase
     }
 
     /// <summary>
-    /// Get current session and campaign data
+    /// Get overview data of the given campaign
     /// </summary>
     /// <param name="channelId">Channel ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
-    [Route("Sessions/Current/{channelId}")]
+    [Route("Campaigns/{channelId}/Overview/")]
     public async Task<IActionResult> GetCurrentSession([FromRoute] ulong channelId)
     {
         var campaign = await _mongoFactory.Create()
@@ -182,39 +257,27 @@ public class PenAndPaperController : ControllerBase
                                                               obj.Description,
                                                               obj.MessageId,
                                                               obj.ThreadId,
-                                                              obj.DungeonMasterUserId
+                                                              obj.DungeonMasterUserId,
+                                                              obj.Players
                                                           })
                                           .FirstAsync()
                                           .ConfigureAwait(false);
 
-        var session = await _mongoFactory.Create()
-                                         .GetDatabase(_mongoFactory.Database)
-                                         .GetCollection<SessionEntity>("Sessions")
-                                         .Find(Builders<SessionEntity>.Filter.Eq(obj => obj.CampaignId, campaign.Id)
-                                             & Builders<SessionEntity>.Filter.Gt(obj => obj.TimeStamp, DateTime.Now))
-                                         .Project(obj => new
-                                                         {
-                                                             obj.TimeStamp,
-                                                             obj.Registrations
-                                                         })
-                                         .FirstOrDefaultAsync()
-                                         .ConfigureAwait(false);
-
-        return Ok(new CurrentSessionDTO
+        return Ok(new CampaignOverviewDTO
                   {
                       Name = campaign.Name,
                       Description = campaign.Description,
                       MessageId = campaign.MessageId,
                       ThreadId = campaign.ThreadId,
                       DungeonMasterUserId = campaign.DungeonMasterUserId,
-                      SessionTimeStamp = session?.TimeStamp,
-                      Registrations = session?.Registrations?
-                                             .Select(obj => new SessionRegistrationDTO
-                                                            {
-                                                                UserId = obj.UserId,
-                                                                IsRegistered = obj.IsRegistered
-                                                            })
-                                             .ToList()
+                      Players = campaign.Players
+                                        ?.Select(obj => new PlayerDTO
+                                                        {
+                                                            UserId = obj.UserId,
+                                                            CharacterName = obj.CharacterName,
+                                                            Class = obj.Class
+                                                        })
+                                        .ToList()
                   });
     }
 

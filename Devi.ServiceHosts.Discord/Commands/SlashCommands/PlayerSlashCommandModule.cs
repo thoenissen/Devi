@@ -35,7 +35,7 @@ public class PlayerSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("create-character", "Character creation")]
     public Task AddCharacter([Summary("Name")] string characterName,
-                             [Summary("Class")] Class characterClass) => CommandHandler.AddCharacter(Context);
+                             [Summary("Class")] Class characterClass) => CommandHandler.AddCharacter(Context, characterName, characterClass);
 
     /// <summary>
     /// Remove character

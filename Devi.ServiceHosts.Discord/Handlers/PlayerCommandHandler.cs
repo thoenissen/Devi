@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
@@ -11,15 +13,27 @@ namespace Devi.ServiceHosts.Discord.Handlers;
 /// </summary>
 public class PlayerCommandHandler : LocatedServiceBase
 {
+    #region Fields
+
+    /// <summary>
+    /// Web API connector
+    /// </summary>
+    private readonly WebApiConnector _connector;
+
+    #endregion // Fields
+
     #region Constructor
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public PlayerCommandHandler(LocalizationService localizationService)
+    /// <param name="connector">Web API connector</param>
+    public PlayerCommandHandler(LocalizationService localizationService,
+                                WebApiConnector connector)
         : base(localizationService)
     {
+        _connector = connector;
     }
 
     #endregion // Constructor
@@ -30,10 +44,23 @@ public class PlayerCommandHandler : LocatedServiceBase
     /// Add character
     /// </summary>
     /// <param name="context">Command context</param>
+    /// <param name="characterName">Name</param>
+    /// <param name="characterClass">Class</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task AddCharacter(InteractionContextContainer context)
+    public async Task AddCharacter(InteractionContextContainer context, string characterName, Class characterClass)
     {
-        throw new System.NotImplementedException();
+        await context.DeferProcessing(true)
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .AddCharacter(context.Channel.Id,
+                                      context.User.Id,
+                                      characterName,
+                                      characterClass)
+                        .ConfigureAwait(false);
+
+        await context.DeleteOriginalResponse()
+                     .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -41,9 +68,18 @@ public class PlayerCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task RemoveCharacter(InteractionContextContainer context)
+    public async Task RemoveCharacter(InteractionContextContainer context)
     {
-        throw new System.NotImplementedException();
+        await context.DeferProcessing(true)
+                     .ConfigureAwait(false);
+
+        await _connector.PenAndPaper
+                        .RemoveCharacter(context.Channel.Id,
+                                         context.User.Id)
+                        .ConfigureAwait(false);
+
+        await context.DeleteOriginalResponse()
+                     .ConfigureAwait(false);
     }
 
     #endregion // Methods
