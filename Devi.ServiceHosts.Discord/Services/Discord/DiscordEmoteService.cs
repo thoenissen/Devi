@@ -103,6 +103,13 @@ public static class DiscordEmoteService
     public static IEmote GetBardEmote(IDiscordClient client) => GetEmote(client, "Bard");
 
     /// <summary>
+    /// Get 'Cleric'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetClericEmote(IDiscordClient client) => GetEmote(client, "Cleric");
+
+    /// <summary>
     /// Get 'Druid'-Emote
     /// </summary>
     /// <param name="client">Discord client</param>
@@ -115,13 +122,6 @@ public static class DiscordEmoteService
     /// <param name="client">Discord client</param>
     /// <returns>Emote</returns>
     public static IEmote GetFighterEmote(IDiscordClient client) => GetEmote(client, "Fighter");
-
-    /// <summary>
-    /// Get 'Gunslinger'-Emote
-    /// </summary>
-    /// <param name="client">Discord client</param>
-    /// <returns>Emote</returns>
-    public static IEmote GetGunslingerEmote(IDiscordClient client) => GetEmote(client, "Gunslinger");
 
     /// <summary>
     /// Get 'Monk'-Emote
