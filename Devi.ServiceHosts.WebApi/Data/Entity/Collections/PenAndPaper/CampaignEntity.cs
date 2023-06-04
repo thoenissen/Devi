@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -50,4 +51,14 @@ public class CampaignEntity
     /// Players
     /// </summary>
     public List<PlayerEntity> Players { get; set; }
+
+    /// <summary>
+    /// Day of week
+    /// </summary>
+    public DayOfWeek DayOfWeek { get; set; }
+
+    /// <summary>
+    /// Time
+    /// </summary>
+    public TimeSpan Time { get; set; }
 }

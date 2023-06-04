@@ -83,7 +83,9 @@ public class PenAndPaperController : ControllerBase
                            ChannelId = data.ChannelId,
                            MessageId = data.MessageId,
                            ThreadId = data.ThreadId,
-                           DungeonMasterUserId = data.DungeonMasterUserId
+                           DungeonMasterUserId = data.DungeonMasterUserId,
+                           DayOfWeek = data.DayOfWeek,
+                           Time = data.Time
                        };
 
         await _mongoFactory.Create()

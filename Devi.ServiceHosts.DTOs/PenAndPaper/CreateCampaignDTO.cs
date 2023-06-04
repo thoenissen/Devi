@@ -40,7 +40,7 @@ public class CreateCampaignDTO
     /// <summary>
     /// Day of week
     /// </summary>
-    public DayOfWeek? DayOfWeek { get; set; }
+    public DayOfWeek DayOfWeek { get; set; }
 
     /// <summary>
     /// Time

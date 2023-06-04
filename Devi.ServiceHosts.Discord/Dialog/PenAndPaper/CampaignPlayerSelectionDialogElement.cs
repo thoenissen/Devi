@@ -63,18 +63,27 @@ public class CampaignPlayerSelectionDialogElement : DialogEmbedMultiSelectSelect
             channel = messageChannel;
         }
 
-        var users = await channel.GetUsersAsync()
+        var channelUsers = await channel.GetUsersAsync()
                                  .Flatten()
                                  .ToListAsync()
                                  .ConfigureAwait(false);
 
-        return users.Where(obj => obj.Id != CommandContext.User.Id)
-                    .Select(obj => new SelectMenuOptionData
-                                   {
-                                       Label = obj.TryGetDisplayName(),
-                                       Value = obj.Id.ToString(),
-                                   })
-                    .ToList();
+        var options = new List<SelectMenuOptionData>();
+
+        foreach (var user in channelUsers.Where(obj => obj.Id != CommandContext.User.Id))
+        {
+            var member = await CommandContext.Guild
+                                             .GetUserAsync(user.Id)
+                                             .ConfigureAwait(false);
+
+            options.Add(new SelectMenuOptionData
+                        {
+                            Label = member.TryGetDisplayName(),
+                            Value = member.Id.ToString(),
+                        });
+        }
+
+        return options;
     }
 
     #endregion // DialogEmbedSelectMenuElementBase<bool>

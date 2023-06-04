@@ -84,19 +84,25 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
                 await context.DeferAsync()
                              .ConfigureAwait(false);
 
-                var message = await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("CampaignCreationLoading", "{0} The campaign is being created.", DiscordEmoteService.GetLoadingEmote(context.Client)))
-                                               .ConfigureAwait(false);
+                var logThread = await textChannel.CreateThreadAsync(LocalizationGroup.GetText("CampaignCreationLogThread", "Log"), ThreadType.PublicThread, ThreadArchiveDuration.OneWeek)
+                                                 .ConfigureAwait(false);
 
-                await message.PinAsync()
-                             .ConfigureAwait(false);
+                await logThread.AddUserAsync(context.Member)
+                               .ConfigureAwait(false);
 
-                var thread = await textChannel.CreateThreadAsync(LocalizationGroup.GetText("CampaignCreationLogThread", "Log"), ThreadType.PublicThread, ThreadArchiveDuration.OneWeek)
-                                              .ConfigureAwait(false);
+                await textChannel.DeleteMessageAsync(logThread.Id)
+                                 .ConfigureAwait(false);
 
-                await thread.AddUserAsync(context.Member)
-                            .ConfigureAwait(false);
+                var overviewThread = await textChannel.CreateThreadAsync(LocalizationGroup.GetText("CampaignCreationOverviewThread", "Overview"), ThreadType.PublicThread, ThreadArchiveDuration.OneWeek)
+                                                      .ConfigureAwait(false);
 
-                await textChannel.DeleteMessageAsync(thread.Id)
+                var message = await overviewThread.SendMessageAsync(LocalizationGroup.GetFormattedText("CampaignCreationLoading", "{0} The campaign is being created.", DiscordEmoteService.GetLoadingEmote(context.Client)))
+                                                  .ConfigureAwait(false);
+
+                await overviewThread.AddUserAsync(context.Member)
+                                    .ConfigureAwait(false);
+
+                await textChannel.DeleteMessageAsync(overviewThread.Id)
                                  .ConfigureAwait(false);
 
                 await _connector.PenAndPaper
@@ -104,14 +110,17 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
                                                 {
                                                     Name = data.Name,
                                                     Description = data.Description,
-                                                    ChannelId = textChannel.Id,
+                                                    ChannelId = overviewThread.Id,
                                                     MessageId = message.Id,
-                                                    ThreadId = thread.Id,
+                                                    ThreadId = logThread.Id,
                                                     DungeonMasterUserId = context.User.Id,
-                                                    DayOfWeek = selectedDay,
+                                                    DayOfWeek = selectedDay.Value,
                                                     Time = selectedTime
                                                 })
                                 .ConfigureAwait(false);
+
+                await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("CampaignCreationChannelsCreated", "The the campaign has been successfully created.\n\n**Threads**\n> <#{0}>\n> <#{1}>", overviewThread.Id, logThread.Id))
+                                 .ConfigureAwait(false);
             }
         }
     }
