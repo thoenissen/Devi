@@ -8,6 +8,7 @@ using Devi.ServiceHosts.Discord.Dialog.Base;
 using Devi.ServiceHosts.Discord.Extensions;
 
 using Discord;
+using Discord.WebSocket;
 
 namespace Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 
@@ -55,11 +56,17 @@ public class CampaignPlayerSelectionDialogElement : DialogEmbedMultiSelectSelect
     /// <returns>Reactions</returns>
     public override async Task<IReadOnlyList<SelectMenuOptionData>> GetEntries()
     {
-        var users = await CommandContext.Channel
-                                        .GetUsersAsync()
-                                        .Flatten()
-                                        .ToListAsync()
-                                        .ConfigureAwait(false);
+        var channel = CommandContext.Channel;
+
+        if (channel is SocketThreadChannel { ParentChannel: IMessageChannel messageChannel })
+        {
+            channel = messageChannel;
+        }
+
+        var users = await channel.GetUsersAsync()
+                                 .Flatten()
+                                 .ToListAsync()
+                                 .ConfigureAwait(false);
 
         return users.Where(obj => obj.Id != CommandContext.User.Id)
                     .Select(obj => new SelectMenuOptionData
