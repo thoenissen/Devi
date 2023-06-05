@@ -8,10 +8,7 @@ using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Data.Entity.Collections.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Services;
 
-using Docker.DotNet.Models;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -376,6 +373,24 @@ public class PenAndPaperController : ControllerBase
                                                             })
                                              .ToList()
                   });
+    }
+
+    /// <summary>
+    /// Delete session
+    /// </summary>
+    /// <param name="messageId">Message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpDelete]
+    [Route("Sessions/{messageId}")]
+    public async Task<IActionResult> DeleteSession([FromRoute] ulong messageId)
+    {
+        await _mongoFactory.Create()
+                           .GetDatabase(_mongoFactory.Database)
+                           .GetCollection<SessionEntity>("Sessions")
+                           .DeleteOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, messageId))
+                           .ConfigureAwait(false);
+
+        return Ok();
     }
 
     /// <summary>

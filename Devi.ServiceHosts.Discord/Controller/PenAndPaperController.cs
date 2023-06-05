@@ -164,7 +164,8 @@ public class PenAndPaperController : LocatedControllerBase
                                               .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64");
 
                 var components = new ComponentBuilder().WithButton(LocalizationGroup.GetText("Join", "Join"), "pnp;session;join", ButtonStyle.Secondary)
-                                                       .WithButton(LocalizationGroup.GetText("Leave", "Leave"), "pnp;session;leave", ButtonStyle.Secondary);
+                                                       .WithButton(LocalizationGroup.GetText("Leave", "Leave"), "pnp;session;leave", ButtonStyle.Secondary)
+                                                       .WithButton(LocalizationGroup.GetText("Settings", "⚙️"), "pnp;session;settings", ButtonStyle.Secondary);
 
                 await message.ModifyAsync(obj =>
                                           {

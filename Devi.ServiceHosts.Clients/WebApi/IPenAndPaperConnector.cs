@@ -89,4 +89,11 @@ public interface IPenAndPaperConnector
     /// <param name="messageId">Message ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task<SessionDTO> GetSession(ulong messageId);
+
+    /// <summary>
+    /// Delete session
+    /// </summary>
+    /// <param name="messageId">Message ID></param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task DeleteSession(ulong messageId);
 }

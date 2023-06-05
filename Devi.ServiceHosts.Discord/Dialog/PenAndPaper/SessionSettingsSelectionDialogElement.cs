@@ -13,7 +13,7 @@ namespace Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 /// <summary>
 /// Configuration selection
 /// </summary>
-public class CampaignSettingsSelectionDialogElement : DialogEmbedSelectMenuElementBase<bool>
+public class SessionSettingsSelectionDialogElement : DialogEmbedSelectMenuElementBase<bool>
 {
     #region Fields
 
@@ -31,8 +31,8 @@ public class CampaignSettingsSelectionDialogElement : DialogEmbedSelectMenuEleme
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="connector">Web API connector</param>
-    public CampaignSettingsSelectionDialogElement(LocalizationService localizationService,
-                                                  WebApiConnector connector)
+    public SessionSettingsSelectionDialogElement(LocalizationService localizationService,
+                                                 WebApiConnector connector)
         : base(localizationService)
     {
         _connector = connector;
@@ -48,8 +48,8 @@ public class CampaignSettingsSelectionDialogElement : DialogEmbedSelectMenuEleme
     /// <returns>Message</returns>
     public override Task<EmbedBuilder> GetMessage()
     {
-        return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Title", "Campaign configuration"))
-                                                 .WithDescription(LocalizationGroup.GetText("Description", "With the following assistant you are able to configure your campaign."))
+        return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Title", "Session configuration"))
+                                                 .WithDescription(LocalizationGroup.GetText("Description", "With the following assistant you are able to configure the session."))
                                                  .WithTimestamp(DateTimeOffset.Now)
                                                  .WithColor(Color.DarkGreen)
                                                  .WithFooter("Devi", "https://cdn.discordapp.com/app-icons/1105924117674340423/711de34b2db8c85c927b7f709bb73b78.png?size=64"));
@@ -65,37 +65,18 @@ public class CampaignSettingsSelectionDialogElement : DialogEmbedSelectMenuEleme
                {
                    new()
                    {
-                       CommandText = LocalizationGroup.GetText("OptionPlayers", "Players"),
+                       CommandText = LocalizationGroup.GetText("OptionDelete", "Delete"),
                        Response = async () =>
                                   {
-                                      var users = await RunSubElement<CampaignPlayerSelectionDialogElement, List<ulong>>().ConfigureAwait(false);
+                                      await _connector.PenAndPaper
+                                                      .DeleteSession(CommandContext.Message.Id)
+                                                      .ConfigureAwait(false);
 
-                                      if (users != null)
-                                      {
-                                          await _connector.PenAndPaper
-                                                          .SetPlayers(CommandContext.Channel.Id, users)
+                                      await CommandContext.Message
+                                                          .DeleteAsync()
                                                           .ConfigureAwait(false);
 
-                                          if (CommandContext.Channel is IThreadChannel threadChannel)
-                                          {
-                                              foreach (var user in users)
-                                              {
-                                                  var member = await CommandContext.Guild
-                                                                                   .GetUserAsync(user)
-                                                                                   .ConfigureAwait(false);
-
-                                                  if (member != null)
-                                                  {
-                                                      await threadChannel.AddUserAsync(member)
-                                                                         .ConfigureAwait(false);
-                                                  }
-                                              }
-                                          }
-
-                                          return false;
-                                      }
-
-                                      return true;
+                                      return false;
                                   },
                    }
                };

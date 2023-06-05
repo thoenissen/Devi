@@ -93,7 +93,15 @@ public abstract class ConnectorBase
     public Task<T> Get<T>(string route, NameValueCollection parameters = null) => Send<Void, T>(HttpMethod.Get, route, null, parameters);
 
     /// <summary>
-    /// Post
+    /// Delete
+    /// </summary>
+    /// <param name="route">Route</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task Delete(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Delete, route, null, parameters);
+
+    /// <summary>
+    /// Delete
     /// </summary>
     /// <typeparam name="T">DTO type</typeparam>
     /// <param name="route">Route</param>

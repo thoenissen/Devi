@@ -206,5 +206,12 @@ public sealed class WebApiConnector : ConnectorBase,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     Task<SessionDTO> IPenAndPaperConnector.GetSession(ulong messageId) => Get<SessionDTO>($"PenAndPaper/Sessions/{messageId}");
 
+    /// <summary>
+    /// Delete session
+    /// </summary>
+    /// <param name="messageId">Message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    Task IPenAndPaperConnector.DeleteSession(ulong messageId) => Delete($"PenAndPaper/Sessions/{messageId}");
+
     #endregion // IPenAndPaperConnector
 }

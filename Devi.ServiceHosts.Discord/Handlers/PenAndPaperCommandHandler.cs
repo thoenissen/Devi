@@ -159,8 +159,46 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
         }
         else
         {
-            await context.ReplyAsync(LocalizationGroup.GetText("OnlyDungeonMasterAllowed", "Only the Dungeon Master is allowed to use the configuration."),
-                                     ephemeral: true)
+            await context.ModifyOriginalResponseAsync(obj => obj.Content = LocalizationGroup.GetText("OnlyDungeonMasterAllowed", "Only the Dungeon Master is allowed to use the configuration."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Settings configuration
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task SessionSettings(InteractionContextContainer context)
+    {
+        await context.DeferProcessing(true)
+                     .ConfigureAwait(false);
+
+        if (await _connector.PenAndPaper
+                            .IsDungeonMaster(context.Channel.Id, context.User.Id)
+                            .ConfigureAwait(false))
+        {
+            using (var dialogHandler = new DialogHandler(context))
+            {
+                dialogHandler.DialogContext.UseEphemeralMessages = true;
+                dialogHandler.DialogContext.ModifyCurrentMessage = true;
+
+                bool restartDialog;
+
+                do
+                {
+                    restartDialog = await dialogHandler.Run<SessionSettingsSelectionDialogElement, bool>()
+                                                       .ConfigureAwait(false);
+                }
+                while (restartDialog);
+            }
+
+            await context.DeleteOriginalResponse()
+                         .ConfigureAwait(false);
+        }
+        else
+        {
+            await context.ModifyOriginalResponseAsync(obj => obj.Content = LocalizationGroup.GetText("OnlyDungeonMasterAllowed", "Only the Dungeon Master is allowed to use the configuration."))
                          .ConfigureAwait(false);
         }
     }

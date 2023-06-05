@@ -38,6 +38,13 @@ public class PenAndPaperMessageComponentCommandModule : LocatedInteractionModule
     public Task DeleteSession() => CommandHandler.LeaveSession(Context);
 
     /// <summary>
+    /// Session settings
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ComponentInteraction("pnp;session;settings")]
+    public Task SessionSettings() => CommandHandler.SessionSettings(Context);
+
+    /// <summary>
     /// Campaign settings
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
