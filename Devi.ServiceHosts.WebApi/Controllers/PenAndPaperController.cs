@@ -124,24 +124,58 @@ public class PenAndPaperController : ControllerBase
     [Route("Campaigns/Players")]
     public async Task<IActionResult> SetPlayers([FromBody] SetPlayersDTO data)
     {
+        var campaign = await _mongoFactory.Create()
+                                          .GetDatabase(_mongoFactory.Database)
+                                          .GetCollection<CampaignEntity>("Campaigns")
+                                          .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId))
+                                          .Project(obj => new
+                                                          {
+                                                              obj.ChannelId,
+                                                              obj.ThreadId,
+                                                              obj.Players
+                                                          })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
+
+        foreach (var player in campaign.Players
+                                       .Where(obj => data.Players.Contains(obj.UserId) == false)
+                                       .ToList())
+        {
+            campaign.Players.Remove(player);
+        }
+
+        foreach (var userId in data.Players
+                                   .Where(obj => campaign.Players.Any(obj2 => obj2.UserId == obj) == false))
+        {
+            campaign.Players
+                    .Add(new PlayerEntity
+                         {
+                             UserId = userId
+                         });
+        }
+
         await _mongoFactory.Create()
                            .GetDatabase(_mongoFactory.Database)
                            .GetCollection<CampaignEntity>("Campaigns")
                            .UpdateOneAsync(Builders<CampaignEntity>.Filter.Eq(obj => obj.ChannelId, data.ChannelId),
                                            Builders<CampaignEntity>.Update.Set(obj => obj.Players,
-                                                                               data.Players
-                                                                                   .Select(obj => new PlayerEntity
-                                                                                                  {
-                                                                                                      UserId = obj
-                                                                                                  })
-                                                                                   .ToList()))
-                                                                   .ConfigureAwait(false);
+                                                                               campaign.Players))
+                           .ConfigureAwait(false);
 
         await _discordConnector.PenAndPaper
                                .RefreshCampaignMessage(new RefreshCampaignMessageDTO
                                                        {
                                                            ChannelId = data.ChannelId
                                                        })
+                               .ConfigureAwait(false);
+
+        await _discordConnector.PenAndPaper
+                               .AddPlayers(new AddPlayersDTO
+                                           {
+                                               OverviewThreadId = campaign.ChannelId,
+                                               LogThreadId = campaign.ThreadId,
+                                               Players = data.Players,
+                                           })
                                .ConfigureAwait(false);
 
         return Ok();

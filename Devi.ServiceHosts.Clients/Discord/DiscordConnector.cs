@@ -80,5 +80,12 @@ public sealed class DiscordConnector : ConnectorBase,
                                                                                          ["channelId"] = channelId.ToString()
                                                                                      });
 
+    /// <summary>
+    /// Add players to threads
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task AddPlayers(AddPlayersDTO dto) => Post("PenAndPaper/Campaigns/addPlayers", dto);
+
     #endregion // Methods
 }

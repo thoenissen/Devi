@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.WebApi;
@@ -122,6 +121,44 @@ public class PenAndPaperController : LocatedControllerBase
                                               obj.Components = components.Build();
                                           })
                              .ConfigureAwait(false);
+            }
+        }
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Add players
+    /// </summary>
+    /// <param name="dto">Data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Campaigns/addPlayers")]
+    public async Task<IActionResult> AddUsersToThread([FromBody] AddPlayersDTO dto)
+    {
+        if (await _discordClient.Client
+                                .GetChannelAsync(dto.OverviewThreadId)
+                                .ConfigureAwait(false)
+                is IThreadChannel overviewThread
+         && await _discordClient.Client
+                                .GetChannelAsync(dto.LogThreadId)
+                                .ConfigureAwait(false)
+                is IThreadChannel logThread)
+        {
+            foreach (var userId in dto.Players)
+            {
+                var member = await overviewThread.Guild
+                                                 .GetUserAsync(userId)
+                                                 .ConfigureAwait(false);
+
+                if (member != null)
+                {
+                    await overviewThread.AddUserAsync(member)
+                                        .ConfigureAwait(false);
+
+                    await logThread.AddUserAsync(member)
+                                   .ConfigureAwait(false);
+                }
             }
         }
 

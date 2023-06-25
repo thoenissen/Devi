@@ -31,4 +31,11 @@ public interface IPenAndPaperConnector
     /// <typeparam name="T">Sub type</typeparam>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task PostLogMessage<T>(PostLogMessageDTO<T> dto, ulong channelId);
+
+    /// <summary>
+    /// Add players to threads
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task AddPlayers(AddPlayersDTO dto);
 }

@@ -76,22 +76,6 @@ public class CampaignSettingsSelectionDialogElement : DialogEmbedSelectMenuEleme
                                                           .SetPlayers(CommandContext.Channel.Id, users)
                                                           .ConfigureAwait(false);
 
-                                          if (CommandContext.Channel is IThreadChannel threadChannel)
-                                          {
-                                              foreach (var user in users)
-                                              {
-                                                  var member = await CommandContext.Guild
-                                                                                   .GetUserAsync(user)
-                                                                                   .ConfigureAwait(false);
-
-                                                  if (member != null)
-                                                  {
-                                                      await threadChannel.AddUserAsync(member)
-                                                                         .ConfigureAwait(false);
-                                                  }
-                                              }
-                                          }
-
                                           return false;
                                       }
 

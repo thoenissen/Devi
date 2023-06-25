@@ -23,6 +23,7 @@ namespace Devi.ServiceHosts.DTOs.PenAndPaper
     /// <summary>
     /// Post log message
     /// </summary>
+    /// <typeparam name="T">Sub type</typeparam>
     public class PostLogMessageDTO<T>
     {
         /// <summary>
