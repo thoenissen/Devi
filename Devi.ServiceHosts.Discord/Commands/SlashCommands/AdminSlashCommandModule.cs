@@ -11,6 +11,7 @@ namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
 /// <summary>
 /// Reminder commands
 /// </summary>
+[DontAutoRegister]
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 [Group("admin", "Administration")]
 public class AdminSlashCommandModule : SlashCommandModuleBase
