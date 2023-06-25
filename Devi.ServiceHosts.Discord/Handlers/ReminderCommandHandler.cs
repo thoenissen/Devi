@@ -94,8 +94,8 @@ public class ReminderCommandHandler : LocatedServiceBase
             if (new Regex(@"\d\d\d\d-\d\d-\d\d").IsMatch(date)
              && DateTime.TryParseExact(date,
                                        "yyyy-MM-dd",
-                                       null,
-                                       DateTimeStyles.None,
+                                       LocalizationGroup.CultureInfo,
+                                       DateTimeStyles.AssumeLocal,
                                        out var parsedDate)
              && string.IsNullOrWhiteSpace(time) == false
              && new Regex(@"\d\d:\d\d").IsMatch(time)

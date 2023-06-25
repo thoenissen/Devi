@@ -25,6 +25,7 @@ public class SessionEntity
     /// <summary>
     /// Time stamp
     /// </summary>
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime TimeStamp { get; set; }
 
     /// <summary>

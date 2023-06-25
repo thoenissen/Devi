@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -212,7 +213,7 @@ public class PenAndPaperCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateSession(InteractionContextContainer context, string date, string time)
     {
-        if (DateTime.TryParseExact($"{date}_{time}", "dd.MM.yyyy_HH:mm", null, System.Globalization.DateTimeStyles.None, out var timeStamp))
+        if (DateTime.TryParseExact($"{date}_{time}", "dd.MM.yyyy_HH:mm", LocalizationGroup.CultureInfo, DateTimeStyles.AssumeLocal, out var timeStamp))
         {
             await context.DeferProcessing(true)
                          .ConfigureAwait(false);
