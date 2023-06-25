@@ -280,7 +280,7 @@ public class PenAndPaperController : LocatedControllerBase
                         var data = dto.Content.Deserialize<UserLeftDTO>();
 
                         await logChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("UserLeftLogEntry",
-                                                                                             "<@{0}> joined the session for <t:{1}:d> at <t:{1}:t>.",
+                                                                                             "<@{0}> left the session for <t:{1}:d> at <t:{1}:t>.",
                                                                                              data.UserId,
                                                                                              new DateTimeOffset(data.SessionTimeStamp).ToUnixTimeSeconds()),
                                                           allowedMentions: AllowedMentions.None)
