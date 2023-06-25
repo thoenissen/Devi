@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,8 +13,8 @@ namespace Devi.ServiceHosts.Clients.Discord;
 /// Discord connector
 /// </summary>
 public sealed class DiscordConnector : ConnectorBase,
-                                IRemindersConnector,
-                                IPenAndPaperConnector
+                                       IRemindersConnector,
+                                       IPenAndPaperConnector
 {
     #region Constructor
 
@@ -64,6 +65,20 @@ public sealed class DiscordConnector : ConnectorBase,
     /// <param name="dto">Data</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task IPenAndPaperConnector.RefreshSessionMessage(RefreshSessionMessageDTO dto) => Post("PenAndPaper/Sessions/refreshMessage", dto);
+
+    /// <summary>
+    /// Post log message
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <param name="channelId">Channel ID</param>
+    /// <typeparam name="T">Sub type</typeparam>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task PostLogMessage<T>(PostLogMessageDTO<T> dto, ulong channelId) => Post("PenAndPaper/Log",
+                                                                                     dto,
+                                                                                     new NameValueCollection
+                                                                                     {
+                                                                                         ["channelId"] = channelId.ToString()
+                                                                                     });
 
     #endregion // Methods
 }

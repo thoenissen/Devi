@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 using Devi.ServiceHosts.WebApi.Data.Entity.Collections.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Services;
 
@@ -297,10 +299,11 @@ public class PenAndPaperController : ControllerBase
                                           .Project(obj => new
                                                           {
                                                               obj.Id,
-                                                              obj.Players
+                                                              obj.Players,
+                                                              obj.ThreadId
                                                           })
                                           .FirstAsync()
-                                            .ConfigureAwait(false);
+                                          .ConfigureAwait(false);
         await _mongoFactory.Create()
                            .GetDatabase(_mongoFactory.Database)
                            .GetCollection<SessionEntity>("Sessions")
@@ -325,6 +328,19 @@ public class PenAndPaperController : ControllerBase
                                                       {
                                                           MessageId = data.MessageId
                                                       })
+                               .ConfigureAwait(false);
+
+        await _discordConnector.PenAndPaper.PostLogMessage(new PostLogMessageDTO<SessionCreatedDTO>
+                                                           {
+                                                               Type = LogMessageType.SessionCreated,
+                                                               Content = new SessionCreatedDTO
+                                                                         {
+                                                                             ChannelId = data.ChannelId,
+                                                                             MessageId = data.MessageId,
+                                                                             TimeStamp = data.TimeStamp
+                                                                         }
+                                                           },
+                                                           campaign.ThreadId)
                                .ConfigureAwait(false);
 
         return Ok();
@@ -384,11 +400,36 @@ public class PenAndPaperController : ControllerBase
     [Route("Sessions/{messageId}")]
     public async Task<IActionResult> DeleteSession([FromRoute] ulong messageId)
     {
-        await _mongoFactory.Create()
-                           .GetDatabase(_mongoFactory.Database)
-                           .GetCollection<SessionEntity>("Sessions")
-                           .DeleteOneAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, messageId))
-                           .ConfigureAwait(false);
+        var session = await _mongoFactory.Create()
+                                         .GetDatabase(_mongoFactory.Database)
+                                         .GetCollection<SessionEntity>("Sessions")
+                                         .FindOneAndDeleteAsync(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, messageId))
+                                         .ConfigureAwait(false);
+
+        if (session.TimeStamp > DateTime.Now)
+        {
+            var campaign = await _mongoFactory.Create()
+                                              .GetDatabase(_mongoFactory.Database)
+                                              .GetCollection<CampaignEntity>("Campaigns")
+                                              .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.Id, session.CampaignId))
+                                              .Project(obj => new
+                                                              {
+                                                                  obj.ThreadId
+                                                              })
+                                              .FirstAsync()
+                                              .ConfigureAwait(false);
+
+            await _discordConnector.PenAndPaper.PostLogMessage(new PostLogMessageDTO<SessionDeletedDTO>
+                                                               {
+                                                                   Type = LogMessageType.SessionDeleted,
+                                                                   Content = new SessionDeletedDTO
+                                                                             {
+                                                                                 TimeStamp = session.TimeStamp
+                                                                             }
+                                                               },
+                                                               campaign.ThreadId)
+                                   .ConfigureAwait(false);
+        }
 
         return Ok();
     }
@@ -432,6 +473,42 @@ public class PenAndPaperController : ControllerBase
                                                        })
                                .ConfigureAwait(false);
 
+        var session = await _mongoFactory.Create()
+                                         .GetDatabase(_mongoFactory.Database)
+                                         .GetCollection<SessionEntity>("Sessions")
+                                         .Find(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId))
+                                         .Project(obj => new
+                                                         {
+                                                             obj.CampaignId,
+                                                             obj.TimeStamp
+                                                         })
+                                         .FirstAsync()
+                                         .ConfigureAwait(false);
+
+        var campaign = await _mongoFactory.Create()
+                                          .GetDatabase(_mongoFactory.Database)
+                                          .GetCollection<CampaignEntity>("Campaigns")
+                                          .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.Id, session.CampaignId))
+                                          .Project(obj => new
+                                                          {
+                                                              obj.ThreadId
+                                                          })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
+
+        await _discordConnector.PenAndPaper
+                               .PostLogMessage(new PostLogMessageDTO<UserJoinedDTO>
+                                               {
+                                                   Type = LogMessageType.UserJoined,
+                                                   Content = new UserJoinedDTO
+                                                             {
+                                                                 UserId = data.UserId,
+                                                                 SessionTimeStamp = session.TimeStamp
+                                                             }
+                                               },
+                                               campaign.ThreadId)
+                               .ConfigureAwait(false);
+
         return Ok();
     }
 
@@ -473,6 +550,43 @@ public class PenAndPaperController : ControllerBase
                                                            MessageId = data.MessageId,
                                                        })
                                .ConfigureAwait(false);
+
+        var session = await _mongoFactory.Create()
+                                         .GetDatabase(_mongoFactory.Database)
+                                         .GetCollection<SessionEntity>("Sessions")
+                                         .Find(Builders<SessionEntity>.Filter.Eq(obj => obj.MessageId, data.MessageId))
+                                         .Project(obj => new
+                                                         {
+                                                             obj.CampaignId,
+                                                             obj.TimeStamp
+                                                         })
+                                         .FirstAsync()
+                                         .ConfigureAwait(false);
+
+        var campaign = await _mongoFactory.Create()
+                                          .GetDatabase(_mongoFactory.Database)
+                                          .GetCollection<CampaignEntity>("Campaigns")
+                                          .Find(Builders<CampaignEntity>.Filter.Eq(obj => obj.Id, session.CampaignId))
+                                          .Project(obj => new
+                                                          {
+                                                              obj.ThreadId
+                                                          })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
+
+        await _discordConnector.PenAndPaper
+                               .PostLogMessage(new PostLogMessageDTO<UserLeftDTO>
+                                               {
+                                                   Type = LogMessageType.UserLeft,
+                                                   Content = new UserLeftDTO
+                                                             {
+                                                                 UserId = data.UserId,
+                                                                 SessionTimeStamp = session.TimeStamp,
+                                                             }
+                                               },
+                                               campaign.ThreadId)
+                               .ConfigureAwait(false);
+
         return Ok();
     }
 

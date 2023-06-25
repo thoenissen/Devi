@@ -22,4 +22,13 @@ public interface IPenAndPaperConnector
     /// <param name="dto">Data</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task RefreshSessionMessage(RefreshSessionMessageDTO dto);
+
+    /// <summary>
+    /// Post log message
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <param name="channelId">Channel ID</param>
+    /// <typeparam name="T">Sub type</typeparam>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task PostLogMessage<T>(PostLogMessageDTO<T> dto, ulong channelId);
 }

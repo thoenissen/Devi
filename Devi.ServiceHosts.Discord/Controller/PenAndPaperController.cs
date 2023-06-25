@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Discord;
 
@@ -178,6 +181,87 @@ public class PenAndPaperController : LocatedControllerBase
         }
 
         return Ok();
+    }
+
+    /// <summary>
+    /// Post log message
+    /// </summary>
+    /// <param name="channelId">Log channel ID</param>
+    /// <param name="dto">Data</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("Log")]
+    public async Task<IActionResult> RefreshSessionMessage([FromQuery] ulong channelId, [FromBody] PostLogMessageDTO dto)
+    {
+        var success = true;
+
+        if (await _discordClient.Client
+                                .GetChannelAsync(channelId)
+                                .ConfigureAwait(false)
+            is ITextChannel logChannel)
+        {
+            switch (dto.Type)
+            {
+                case LogMessageType.SessionCreated:
+                    {
+                        var data = dto.Content.Deserialize<SessionCreatedDTO>();
+
+                        await logChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("SessionCreatedLogEntry",
+                                                                                             "A new session ({0}) has been created for the <t:{1}:d> at <t:{1}:t>.",
+                                                                                             $"https://discord.com/channels/{logChannel.GuildId}/{data.ChannelId}/{data.MessageId}",
+                                                                                             new DateTimeOffset(data.TimeStamp).ToUnixTimeSeconds()))
+                                        .ConfigureAwait(false);
+                    }
+                    break;
+
+                case LogMessageType.SessionDeleted:
+                    {
+                        var data = dto.Content.Deserialize<SessionDeletedDTO>();
+
+                        await logChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("SessionDeletedLogEntry",
+                                                                                             "The session for <t:{0}:d> at <t:{0}:t> has been deleted.",
+                                                                                             new DateTimeOffset(data.TimeStamp).ToUnixTimeSeconds()))
+                                        .ConfigureAwait(false);
+                    }
+                    break;
+
+                case LogMessageType.UserJoined:
+                    {
+                        var data = dto.Content.Deserialize<UserJoinedDTO>();
+
+                        await logChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("UserJoinedLogEntry",
+                                                                                             "<@{0}> joined the session for <t:{1}:d> at <t:{1}:t>.",
+                                                                                             data.UserId,
+                                                                                             new DateTimeOffset(data.SessionTimeStamp).ToUnixTimeSeconds()),
+                                                          allowedMentions: AllowedMentions.None)
+                                        .ConfigureAwait(false);
+                    }
+                    break;
+
+                case LogMessageType.UserLeft:
+                    {
+                        var data = dto.Content.Deserialize<UserLeftDTO>();
+
+                        await logChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("UserLeftLogEntry",
+                                                                                             "<@{0}> joined the session for <t:{1}:d> at <t:{1}:t>.",
+                                                                                             data.UserId,
+                                                                                             new DateTimeOffset(data.SessionTimeStamp).ToUnixTimeSeconds()),
+                                                          allowedMentions: AllowedMentions.None)
+                                        .ConfigureAwait(false);
+                    }
+                    break;
+
+                default:
+                    {
+                        success = false;
+                    }
+                    break;
+            }
+        }
+
+        return success
+                   ? Ok()
+                   : BadRequest();
     }
 
     #endregion // Methods
