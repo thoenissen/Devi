@@ -63,9 +63,10 @@ public class OneTimeReminderJob : LocatedAsyncJob
 
                 if (jobEntity?.IsExecuted == false)
                 {
-                    if (dbFactory.GetRepository<OneTimeReminderRepository>()
-                                 .Refresh(obj => obj.Id == _id,
-                                          obj => obj.IsExecuted = true))
+                    if (await dbFactory.GetRepository<OneTimeReminderRepository>()
+                                       .Refresh(obj => obj.Id == _id,
+                                                obj => obj.IsExecuted = true)
+                                       .ConfigureAwait(false))
                     {
                         await transaction.CommitAsync()
                                          .ConfigureAwait(false);
@@ -89,9 +90,10 @@ public class OneTimeReminderJob : LocatedAsyncJob
                         {
                             if (isExecuted == false)
                             {
-                                dbFactory.GetRepository<OneTimeReminderRepository>()
-                                         .Refresh(obj => obj.Id == _id,
-                                                  obj => obj.IsExecuted = false);
+                                await dbFactory.GetRepository<OneTimeReminderRepository>()
+                                               .Refresh(obj => obj.Id == _id,
+                                                        obj => obj.IsExecuted = false)
+                                               .ConfigureAwait(false);
                             }
                         }
                     }

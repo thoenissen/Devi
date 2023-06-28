@@ -18,7 +18,7 @@ public abstract class ConnectorBase
     /// <summary>
     /// Dummy type
     /// </summary>
-    private class Void
+    protected class Void
     {
     }
 
@@ -63,7 +63,18 @@ public abstract class ConnectorBase
     /// <param name="dto">DTO</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Post<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Post, route, dto, parameters);
+    protected Task Post<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Post, route, dto, parameters);
+
+    /// <summary>
+    /// Post
+    /// </summary>
+    /// <typeparam name="TIn">Input DTO type</typeparam>
+    /// <typeparam name="TOut">Output DTO type</typeparam>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected Task<TOut> Post<TIn, TOut>(string route, TIn dto, NameValueCollection parameters = null) => Send<TIn, TOut>(HttpMethod.Post, route, dto, parameters);
 
     /// <summary>
     /// Put
@@ -73,7 +84,18 @@ public abstract class ConnectorBase
     /// <param name="dto">DTO</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Put<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Put, route, dto, parameters);
+    protected Task Put<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Put, route, dto, parameters);
+
+    /// <summary>
+    /// Put
+    /// </summary>
+    /// <typeparam name="TIn">Input DTO type</typeparam>
+    /// <typeparam name="TOut">Output DTO type</typeparam>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected Task<TOut> Put<TIn, TOut>(string route, TIn dto, NameValueCollection parameters = null) => Send<TIn, TOut>(HttpMethod.Put, route, dto, parameters);
 
     /// <summary>
     /// Get
@@ -81,7 +103,7 @@ public abstract class ConnectorBase
     /// <param name="route">Route</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Get(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Get, route, null, parameters);
+    protected Task Get(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Get, route, null, parameters);
 
     /// <summary>
     /// Get
@@ -90,7 +112,7 @@ public abstract class ConnectorBase
     /// <param name="route">Route</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<T> Get<T>(string route, NameValueCollection parameters = null) => Send<Void, T>(HttpMethod.Get, route, null, parameters);
+    protected Task<T> Get<T>(string route, NameValueCollection parameters = null) => Send<Void, T>(HttpMethod.Get, route, null, parameters);
 
     /// <summary>
     /// Delete
@@ -98,7 +120,7 @@ public abstract class ConnectorBase
     /// <param name="route">Route</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Delete(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Delete, route, null, parameters);
+    protected Task Delete(string route, NameValueCollection parameters = null) => Send<Void, Void>(HttpMethod.Delete, route, null, parameters);
 
     /// <summary>
     /// Delete
@@ -108,7 +130,18 @@ public abstract class ConnectorBase
     /// <param name="dto">DTO</param>
     /// <param name="parameters">parameters</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Delete<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Delete, route, dto, parameters);
+    protected Task Delete<T>(string route, T dto, NameValueCollection parameters = null) => Send<T, Void>(HttpMethod.Delete, route, dto, parameters);
+
+    /// <summary>
+    /// Delete
+    /// </summary>
+    /// <typeparam name="TIn">Input DTO type</typeparam>
+    /// <typeparam name="TOut">Output DTO type</typeparam>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected Task<TOut> Delete<TIn, TOut>(string route, TIn dto, NameValueCollection parameters = null) => Send<TIn, TOut>(HttpMethod.Delete, route, dto, parameters);
 
     #endregion // Public methods
 

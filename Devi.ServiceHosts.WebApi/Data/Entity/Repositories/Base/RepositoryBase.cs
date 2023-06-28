@@ -181,7 +181,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
     /// <param name="expression">Defines the entity object to be refreshed</param>
     /// <param name="refreshAction">Action to be performed with the entity object</param>
     /// <returns>Is the operation performed successfully?</returns>
-    public bool Refresh(Expression<Func<TEntity, bool>> expression, Action<TEntity> refreshAction)
+    public async Task<bool> Refresh(Expression<Func<TEntity, bool>> expression, Action<TEntity> refreshAction)
     {
         var success = false;
 
@@ -191,7 +191,8 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
         {
             var set = _dbContext.Set<TEntity>();
 
-            var entity = set.First(expression);
+            var entity = await set.FirstAsync(expression)
+                                  .ConfigureAwait(false);
 
             if (set.Local.Contains(entity) == false)
             {
@@ -200,7 +201,8 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
 
             refreshAction(entity);
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync()
+                            .ConfigureAwait(false);
 
             success = true;
         }
@@ -285,7 +287,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
     /// <param name="expression">Defines the entity object to be refreshed</param>
     /// <param name="beforeRemove">Action to be performed before the remove-operation</param>
     /// <returns>Is the operation performed successfully?</returns>
-    public bool Remove(Expression<Func<TEntity, bool>> expression, Action<TEntity> beforeRemove = null)
+    public async Task<bool> Remove(Expression<Func<TEntity, bool>> expression, Action<TEntity> beforeRemove = null)
     {
         var success = false;
 
@@ -295,13 +297,15 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
         {
             var dbSet = _dbContext.Set<TEntity>();
 
-            var entity = dbSet.First(expression);
+            var entity = await dbSet.FirstAsync(expression)
+                                    .ConfigureAwait(false);
 
             beforeRemove?.Invoke(entity);
 
             dbSet.Remove(entity);
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync()
+                            .ConfigureAwait(false);
 
             success = true;
         }
@@ -318,7 +322,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
     /// </summary>
     /// <param name="expression">Defines the entity objects to be refreshed</param>
     /// <returns>Is the operation performed successfully?</returns>
-    public bool RemoveRange(Expression<Func<TEntity, bool>> expression)
+    public async Task<bool> RemoveRange(Expression<Func<TEntity, bool>> expression)
     {
         var success = false;
 
@@ -328,12 +332,15 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
         {
             var dbSet = _dbContext.Set<TEntity>();
 
-            foreach (var entry in dbSet.Where(expression))
+            foreach (var entry in await dbSet.Where(expression)
+                                             .ToListAsync()
+                                             .ConfigureAwait(false))
             {
                 dbSet.Remove(entry);
             }
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync()
+                            .ConfigureAwait(false);
 
             success = true;
         }

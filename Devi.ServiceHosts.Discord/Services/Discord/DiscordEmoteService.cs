@@ -173,6 +173,153 @@ public static class DiscordEmoteService
     public static IEmote GetWizardEmote(IDiscordClient client) => GetEmote(client, "Wizard");
 
     /// <summary>
+    /// Get 'Add'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetAddEmote(IDiscordClient client) => GetEmote(client, "Add");
+
+    /// <summary>
+    /// Get 'Add2'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetAdd2Emote(IDiscordClient client) => GetEmote(client, "Add2");
+
+    /// <summary>
+    /// Get 'Edit'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEditEmote(IDiscordClient client) => GetEmote(client, "Edit");
+
+    /// <summary>
+    /// Get 'Edit2'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEdit2Emote(IDiscordClient client) => GetEmote(client, "Edit2");
+
+    /// <summary>
+    /// Get 'Edit3'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEdit3Emote(IDiscordClient client) => GetEmote(client, "Edit3");
+
+    /// <summary>
+    /// Get 'Edit4'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEdit4Emote(IDiscordClient client) => GetEmote(client, "Edit4");
+
+    /// <summary>
+    /// Get 'Edit5'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEdit5Emote(IDiscordClient client) => GetEmote(client, "Edit5");
+
+    /// <summary>
+    /// Get 'TrashCan'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetTrashCanEmote(IDiscordClient client) => GetEmote(client, "TrashCan");
+
+    /// <summary>
+    /// Get 'TrashCan2'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetTrashCan2Emote(IDiscordClient client) => GetEmote(client, "TrashCan2");
+
+    /// <summary>
+    /// Get 'Emote'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEmojiEmote(IDiscordClient client) => GetEmote(client, "Emoji");
+
+    /// <summary>
+    /// Get 'Empty'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetEmptyEmote(IDiscordClient client) => GetEmote(client, "Empty");
+
+    /// <summary>
+    /// Get 'Bullet'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetBulletEmote(IDiscordClient client) => GetEmote(client, "Bullet");
+
+    /// <summary>
+    /// Get 'Image'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetImageEmote(IDiscordClient client) => GetEmote(client, "Image");
+
+    /// <summary>
+    /// Get 'QuestionMark'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetQuestionMarkEmote(IDiscordClient client) => GetEmote(client, "QuestionMark");
+
+    /// <summary>
+    /// Get 'ArrowUp'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetArrowUpEmote(IDiscordClient client) => GetEmote(client, "ArrowUp");
+
+    /// <summary>
+    /// Get 'ArrowDown'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetArrowDownEmote(IDiscordClient client) => GetEmote(client, "ArrowDown");
+
+    /// <summary>
+    /// Get 'Star'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetStarEmote(IDiscordClient client) => GetEmote(client, "Star");
+
+    /// <summary>
+    /// Get 'First'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetFirstEmote(IDiscordClient client) => GetEmote(client, "First");
+
+    /// <summary>
+    /// Get 'Previous'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GePreviousEmote(IDiscordClient client) => GetEmote(client, "Previous");
+
+    /// <summary>
+    /// Get 'Next'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetNextEmote(IDiscordClient client) => GetEmote(client, "Next");
+
+    /// <summary>
+    /// Get 'Last'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetLastEmote(IDiscordClient client) => GetEmote(client, "Last");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

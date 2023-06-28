@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Linq;
 
+using Devi.ServiceHosts.WebApi.Data.Entity.Tables.LookingForGroup;
 using Devi.ServiceHosts.WebApi.Data.Entity.Tables.Reminders;
 
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +95,25 @@ public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Reminders
         modelBuilder.Entity<OneTimeReminderEntity>();
+
+        //  Looking for group
+        modelBuilder.Entity<LookingForGroupAppointmentEntity>();
+        modelBuilder.Entity<LookingForGroupParticipantEntity>();
+
+        modelBuilder.Entity<LookingForGroupParticipantEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AppointmentMessageId,
+                                       obj.UserId
+                                   });
+
+        modelBuilder.Entity<LookingForGroupAppointmentEntity>()
+                    .HasMany(obj => obj.Participants)
+                    .WithOne(obj => obj.Appointment)
+                    .HasForeignKey(obj => obj.AppointmentMessageId)
+                    .IsRequired();
 
         // Disabling cascade on delete
         foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()

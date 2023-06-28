@@ -1,0 +1,45 @@
+﻿using System.Threading.Tasks;
+
+using Devi.ServiceHosts.Discord.Commands.Base;
+using Devi.ServiceHosts.Discord.Commands.Modals.Data;
+using Devi.ServiceHosts.Discord.Handlers;
+
+using Discord.Interactions;
+
+namespace Devi.ServiceHosts.Discord.Commands.Modals;
+
+/// <summary>
+/// Guild modals
+/// </summary>
+public class LookingForGroupModals : LocatedInteractionModuleBase
+{
+    #region Properties
+
+    /// <summary>
+    /// Command handler
+    /// </summary>
+    public LookingForGroupCommandHandler CommandHandler { get; set; }
+
+    #endregion // Properties
+
+    #region Methods
+
+    /// <summary>
+    /// Creation
+    /// </summary>
+    /// <param name="modal">Modal input</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [ModalInteraction(LookingForGroupCreationModalData.CustomId)]
+    public Task Creation(LookingForGroupCreationModalData modal) => CommandHandler.Create(Context, modal.AppointmentTitle, modal.AppointmentDescription);
+
+    /// <summary>
+    /// Edit
+    /// </summary>
+    /// <param name="appointmentMessageId">Appointment message ID</param>
+    /// <param name="modal">Modal input</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [ModalInteraction($"{LookingForGroupEditModalData.CustomId};*")]
+    public Task Edit(ulong appointmentMessageId, LookingForGroupEditModalData modal) => CommandHandler.Edit(Context, appointmentMessageId, modal.AppointmentTitle, modal.AppointmentDescription);
+
+    #endregion // Methods
+}

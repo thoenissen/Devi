@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.Docker;
+using Devi.ServiceHosts.DTOs.LookingForGroup;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 using Devi.ServiceHosts.DTOs.Reminders;
@@ -18,7 +19,8 @@ namespace Devi.ServiceHosts.Clients.WebApi;
 public sealed class WebApiConnector : ConnectorBase,
                                       IRemindersConnector,
                                       IDockerConnector,
-                                      IPenAndPaperConnector
+                                      IPenAndPaperConnector,
+                                      ILookingForGroupConnector
 {
     #region Constructor
 
@@ -49,6 +51,11 @@ public sealed class WebApiConnector : ConnectorBase,
     /// Pen and paper
     /// </summary>
     public IPenAndPaperConnector PenAndPaper => this;
+
+    /// <summary>
+    /// Looking for group
+    /// </summary>
+    public ILookingForGroupConnector LookingForGroup => this;
 
     #endregion // Properties
 
@@ -214,4 +221,78 @@ public sealed class WebApiConnector : ConnectorBase,
     Task IPenAndPaperConnector.DeleteSession(ulong messageId) => Delete($"PenAndPaper/Sessions/{messageId}");
 
     #endregion // IPenAndPaperConnector
+
+    #region ILookingForGroupConnector
+
+    /// <summary>
+    /// Create appointment
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task ILookingForGroupConnector.CreateAppointment(CreateAppointmentDTO dto) => Post("LookingForGroup/Appointments", dto);
+
+    /// <summary>
+    /// Add registration
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<AppointmentDTO> ILookingForGroupConnector.AddRegistration(AddRegistrationDTO dto) => Post<AddRegistrationDTO, AppointmentDTO>("LookingForGroup/Registrations", dto);
+
+    /// <summary>
+    /// Remove registration
+    /// </summary>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<AppointmentDTO> ILookingForGroupConnector.RemoveRegistration(RemoveRegistrationDTO dto) => Delete<RemoveRegistrationDTO, AppointmentDTO>("LookingForGroup/Registrations", dto);
+
+    /// <summary>
+    /// Get appointment details
+    /// </summary>
+    /// <param name="appointmentMessageId">Appointment message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<AppointmentDetailsDTO> ILookingForGroupConnector.GetAppointment(ulong appointmentMessageId) => Get<AppointmentDetailsDTO>("LookingForGroup/Appointments",
+                                                                                                                                   new NameValueCollection
+                                                                                                                                   {
+                                                                                                                                       ["appointmentMessageId"] = appointmentMessageId.ToString()
+                                                                                                                                   });
+
+    /// <summary>
+    /// Refresh appointment
+    /// </summary>
+    /// <param name="appointmentMessageId">Appointment message ID</param>
+    /// <param name="dto">DTO</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<AppointmentDTO> ILookingForGroupConnector.RefreshAppointment(ulong appointmentMessageId, RefreshAppointmentDTO dto) => Put<RefreshAppointmentDTO, AppointmentDTO>("LookingForGroup/Appointments",
+                                                                                                                                                                           dto,
+                                                                                                                                                                           new NameValueCollection
+                                                                                                                                                                           {
+                                                                                                                                                                               ["appointmentMessageId"] = appointmentMessageId.ToString()
+                                                                                                                                                                           });
+
+    /// <summary>
+    /// Is the given user the creator of the appointment?
+    /// </summary>
+    /// <param name="appointmentMessageId">Appointment message ID</param>
+    /// <param name="userId">User ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<bool> ILookingForGroupConnector.IsCreator(ulong appointmentMessageId, ulong userId) => Get<bool>("LookingForGroup/Appointments/isCreator",
+                                                                                                          new NameValueCollection
+                                                                                                          {
+                                                                                                              ["appointmentMessageId"] = appointmentMessageId.ToString(),
+                                                                                                              ["userId"] = userId.ToString()
+                                                                                                          });
+
+    /// <summary>
+    /// Delete appointment
+    /// </summary>
+    /// <param name="appointmentMessageId">Appointment message ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<AppointmentDTO> ILookingForGroupConnector.DeleteAppointment(ulong appointmentMessageId) => Delete<Void, AppointmentDTO>("LookingForGroup/Appointments",
+                                                                                                                                 null,
+                                                                                                                                 new NameValueCollection
+                                                                                                                                 {
+                                                                                                                                     ["appointmentMessageId"] = appointmentMessageId.ToString()
+                                                                                                                                 });
+
+    #endregion // ILookingForGroupConnector
 }
