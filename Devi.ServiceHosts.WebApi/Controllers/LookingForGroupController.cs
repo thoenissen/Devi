@@ -34,7 +34,6 @@ public class LookingForGroupController : ControllerBase
     /// Constructor
     /// </summary>
     /// <param name="repositoryFactory">Repository factory</param>
-    /// <param name="jobScheduler">Job scheduler</param>
     public LookingForGroupController(RepositoryFactory repositoryFactory)
     {
         _repositoryFactory = repositoryFactory;
