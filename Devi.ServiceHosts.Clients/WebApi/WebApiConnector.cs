@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.Docker;
 using Devi.ServiceHosts.DTOs.LookingForGroup;
@@ -11,11 +12,14 @@ using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 using Devi.ServiceHosts.DTOs.Reminders;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Clients.WebApi;
 
 /// <summary>
 /// WebApi connector
 /// </summary>
+[Injectable<WebApiConnector>(ServiceLifetime.Singleton)]
 public sealed class WebApiConnector : ConnectorBase,
                                       IRemindersConnector,
                                       IDockerConnector,

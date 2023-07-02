@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.WebApi.Data.Entity.Repositories.Base;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.WebApi.Data.Entity;
 
 /// <summary>
 /// Factory for creating repositories.
 /// </summary>
+[Injectable<RepositoryFactory>(ServiceLifetime.Transient)]
 public sealed class RepositoryFactory : IDisposable
 {
     #region Fields

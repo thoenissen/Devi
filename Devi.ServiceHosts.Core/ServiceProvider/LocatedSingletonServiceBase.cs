@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Devi.ServiceHosts.Core.Localization;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Devi.ServiceHosts.Core.Localization;
 
 namespace Devi.ServiceHosts.Core.ServiceProvider;
 
@@ -26,6 +21,15 @@ public class LocatedSingletonServiceBase
 
     #endregion // Fields
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public LocatedSingletonServiceBase(LocalizationService localizationService)
+    {
+        _localizationService = localizationService;
+    }
+
     #region Properties
 
     /// <summary>
@@ -34,21 +38,4 @@ public class LocatedSingletonServiceBase
     public LocalizationGroup LocalizationGroup => _localizationGroup ??= _localizationService.GetGroup(GetType().Name);
 
     #endregion // Properties
-
-    #region Methods
-
-    /// <summary>
-    /// Initialize
-    /// </summary>
-    /// <param name="serviceProvider">Service provider</param>
-    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public virtual Task Initialize(IServiceProvider serviceProvider)
-    {
-        _localizationService = serviceProvider.GetRequiredService<LocalizationService>();
-
-        return Task.CompletedTask;
-    }
-
-    #endregion // Methods
 }

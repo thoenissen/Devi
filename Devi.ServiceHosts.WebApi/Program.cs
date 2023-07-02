@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.WebApi.Data.Entity;
@@ -78,27 +77,12 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddHttpClient();
 
-        builder.Services.AddSingleton<DiscordConnector>();
-        builder.Services.AddSingleton<MongoClientFactory>();
-        builder.Services.AddSingleton<DockerClientFactory>();
-
         builder.Services.AddTransient<RepositoryFactory>();
 
-        var singletons = new List<LocatedSingletonServiceBase>();
-
-        foreach (var type in Assembly.Load("Devi.ServiceHosts.Core")
-                                     .GetTypes()
-                                     .Where(obj => typeof(LocatedSingletonServiceBase).IsAssignableFrom(obj)
-                                                && obj.IsAbstract == false))
-        {
-            var instance = (LocatedSingletonServiceBase)Activator.CreateInstance(type);
-            if (instance != null)
-            {
-                builder.Services.AddSingleton(type, instance);
-
-                singletons.Add(instance);
-            }
-        }
+        var singletons = builder.Services.AddServices(Assembly.GetExecutingAssembly(),
+                                                      Assembly.Load("Devi.Core"),
+                                                      Assembly.Load("Devi.ServiceHosts.Core"),
+                                                      Assembly.Load("Devi.ServiceHosts.Clients"));
 
         var jobScheduler = new JobScheduler();
         await using (jobScheduler.ConfigureAwait(false))
@@ -118,7 +102,7 @@ public class Program
             app.UseAuthorization();
             app.MapControllers();
 
-            await jobScheduler.Initialize(app.Services)
+            await jobScheduler.Initialize()
                               .ConfigureAwait(false);
 
             await jobScheduler.StartAsync()
@@ -126,11 +110,8 @@ public class Program
 
             using (var serviceProvider = ServiceProviderFactory.Create())
             {
-                foreach (var singleton in singletons)
-                {
-                    await singleton.Initialize(serviceProvider)
-                                   .ConfigureAwait(false);
-                }
+                await singletons.Initialize(serviceProvider)
+                                .ConfigureAwait(false);
 
                 await app.RunAsync()
                          .ConfigureAwait(false);

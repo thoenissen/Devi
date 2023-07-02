@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.WebApi.Jobs.Base;
 
@@ -13,7 +14,7 @@ namespace Devi.ServiceHosts.WebApi.Services;
 /// <summary>
 /// Scheduling jobs
 /// </summary>
-public sealed class JobScheduler : LocatedSingletonServiceBase,
+public sealed class JobScheduler : ISingletonInitialization,
                                    IAsyncDisposable,
                                    IJobFactory
 {
@@ -45,24 +46,22 @@ public sealed class JobScheduler : LocatedSingletonServiceBase,
 
     #endregion // Methods
 
-    #region SingletonLocatedServiceBase
+    #region ISingletonInitialization
 
     /// <summary>
     /// Initialize
     /// </summary>
-    /// <param name="serviceProvider">Service provider</param>
     /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task Initialize(IServiceProvider serviceProvider)
+    public Task Initialize()
     {
-        await base.Initialize(serviceProvider)
-                  .ConfigureAwait(false);
-
         JobManager.JobFactory = this;
         JobManager.Initialize();
+
+        return Task.CompletedTask;
     }
 
-    #endregion // SingletonLocatedServiceBase
+    #endregion // ISingletonInitialization
 
     #region IJobFactory
 

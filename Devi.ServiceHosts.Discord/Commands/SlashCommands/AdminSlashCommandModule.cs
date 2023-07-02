@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
 
 using Discord;
 using Discord.Interactions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
 
 /// <summary>
 /// Reminder commands
 /// </summary>
+[Injectable<AdminSlashCommandModule>(ServiceLifetime.Transient)]
 [DontAutoRegister]
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 [Group("admin", "Administration")]

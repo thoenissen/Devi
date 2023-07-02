@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
@@ -10,11 +11,14 @@ using Devi.ServiceHosts.Discord.Services.Discord;
 
 using Discord;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Services.LookingForGroup;
 
 /// <summary>
 /// Looking for group message service
 /// </summary>
+[Injectable<LookingForGroupMessageService>(ServiceLifetime.Transient)]
 public class LookingForGroupMessageService : LocatedServiceBase
 {
     #region Fields

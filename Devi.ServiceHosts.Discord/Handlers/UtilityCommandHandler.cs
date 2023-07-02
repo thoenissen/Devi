@@ -2,17 +2,21 @@
 using System.Text;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Services.Discord;
 
 using Discord;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Gold Splitter commands
 /// </summary>
+[Injectable<UtilityCommandHandler>(ServiceLifetime.Transient)]
 public class UtilityCommandHandler : LocatedServiceBase
 {
     #region Constructor

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
@@ -11,14 +12,16 @@ using Devi.ServiceHosts.Discord.Dialog.Base;
 using Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
-
 using Discord;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Dungeon master commands
 /// </summary>
+[Injectable<PenAndPaperCommandHandler>(ServiceLifetime.Transient)]
 public class PenAndPaperCommandHandler : LocatedServiceBase
 {
     #region Fields

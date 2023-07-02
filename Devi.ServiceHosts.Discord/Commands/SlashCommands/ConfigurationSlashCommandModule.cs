@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
 
 using Discord;
 using Discord.Interactions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
 
 /// <summary>
 /// Server configuration commands
 /// </summary>
+[Injectable<ConfigurationSlashCommandModule>(ServiceLifetime.Transient)]
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 [DontAutoRegister]
 public class ConfigurationSlashCommandModule : SlashCommandModuleBase

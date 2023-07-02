@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace Devi.ServiceHosts.DTOs.PenAndPaper
+namespace Devi.ServiceHosts.DTOs.PenAndPaper;
+
+/// <summary>
+/// Session deleted
+/// </summary>
+public class SessionDeletedDTO
 {
     /// <summary>
-    /// Session deleted
+    /// Time stamp
     /// </summary>
-    public class SessionDeletedDTO
-    {
-        /// <summary>
-        /// Time stamp
-        /// </summary>
-        public DateTime TimeStamp { get; set; }
-    }
+    public DateTime TimeStamp { get; set; }
 }

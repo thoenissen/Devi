@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Exceptions;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
@@ -22,7 +23,10 @@ namespace Devi.ServiceHosts.Discord.Services.Discord;
 /// <summary>
 /// Discord client
 /// </summary>
-public sealed class DiscordClient : LocatedSingletonServiceBase, IDisposable
+[Injectable<DiscordClient>(ServiceLifetime.Singleton)]
+public sealed class DiscordClient : LocatedSingletonServiceBase,
+                                    ISingletonInitialization,
+                                    IDisposable
 {
     #region Fields
 
@@ -52,6 +56,24 @@ public sealed class DiscordClient : LocatedSingletonServiceBase, IDisposable
     private LocalizationService _localizationService;
 
     #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <param name="interactivityService">Interactivity service</param>
+    public DiscordClient(IServiceProvider serviceProvider, LocalizationService localizationService, InteractivityService interactivityService)
+        : base(localizationService)
+    {
+        _serviceProvider = serviceProvider;
+        _localizationService = localizationService;
+        _interactivityService = interactivityService;
+    }
+
+    #endregion // Constructor
 
     #region Properties
 
@@ -121,6 +143,8 @@ public sealed class DiscordClient : LocatedSingletonServiceBase, IDisposable
 
         await Interaction.AddModulesAsync(Assembly.GetExecutingAssembly(), _serviceProvider)
                          .ConfigureAwait(false);
+
+        _interactivityService.SetDiscordClient(Client);
 
         await Client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("DEVI_DISCORD_TOKEN"))
                             .ConfigureAwait(false);
@@ -462,24 +486,17 @@ public sealed class DiscordClient : LocatedSingletonServiceBase, IDisposable
 
     #endregion // IDisposable
 
-    #region LocatedSingletonServiceBase
+    #region ISingletonInitialization
 
     /// <summary>
     /// Initialize
     /// </summary>
-    /// <param name="serviceProvider">Service provider</param>
     /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task Initialize(IServiceProvider serviceProvider)
+    public async Task Initialize()
     {
-        await base.Initialize(serviceProvider).ConfigureAwait(false);
-
-        _serviceProvider = serviceProvider;
-        _localizationService = serviceProvider.GetRequiredService<LocalizationService>();
-        _interactivityService = serviceProvider.GetRequiredService<InteractivityService>();
-
         await StartAsync().ConfigureAwait(false);
     }
 
-    #endregion // LocatedSingletonServiceBase
+    #endregion // ISingletonInitialization
 }

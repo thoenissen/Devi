@@ -3,15 +3,21 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.DTOs.Reminders;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Clients.Discord;
 
 /// <summary>
 /// Discord connector
 /// </summary>
+[Injectable<DiscordConnector>(ServiceLifetime.Singleton)]
+[Injectable<IRemindersConnector>(ServiceLifetime.Singleton)]
+[Injectable<IPenAndPaperConnector>(ServiceLifetime.Singleton)]
 public sealed class DiscordConnector : ConnectorBase,
                                        IRemindersConnector,
                                        IPenAndPaperConnector

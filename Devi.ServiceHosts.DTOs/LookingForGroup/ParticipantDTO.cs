@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace Devi.ServiceHosts.DTOs.LookingForGroup
+namespace Devi.ServiceHosts.DTOs.LookingForGroup;
+
+/// <summary>
+/// Participant
+/// </summary>
+public class ParticipantDTO
 {
     /// <summary>
-    /// Participant
+    /// User ID
     /// </summary>
-    public class ParticipantDTO
-    {
-        /// <summary>
-        /// User ID
-        /// </summary>
-        public ulong UserId { get; set; }
+    public ulong UserId { get; set; }
 
-        /// <summary>
-        /// Registration time stamp
-        /// </summary>
-        public DateTime RegistrationTimeStamp { get; set; }
-    }
+    /// <summary>
+    /// Registration time stamp
+    /// </summary>
+    public DateTime RegistrationTimeStamp { get; set; }
 }

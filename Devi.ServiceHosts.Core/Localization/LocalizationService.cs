@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization.Data;
 using Devi.ServiceHosts.Core.ServiceProvider;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
 
@@ -16,7 +18,8 @@ namespace Devi.ServiceHosts.Core.Localization;
 /// <summary>
 /// Providing located string
 /// </summary>
-public class LocalizationService : LocatedSingletonServiceBase
+[Injectable<LocalizationService>(ServiceLifetime.Singleton)]
+public class LocalizationService : ISingletonInitialization
 {
     #region Fields
 
@@ -75,19 +78,15 @@ public class LocalizationService : LocatedSingletonServiceBase
 
     #endregion // Methods
 
-    #region LocatedSingletonServiceBase
+    #region ISingletonInitialization
 
     /// <summary>
     /// Initialize
     /// </summary>
-    /// <param name="serviceProvider">Service provider</param>
     /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task Initialize(IServiceProvider serviceProvider)
+    public async Task Initialize()
     {
-        await base.Initialize(serviceProvider)
-                  .ConfigureAwait(false);
-
         var assembly = Assembly.GetEntryAssembly();
         if (assembly != null)
         {
@@ -102,5 +101,5 @@ public class LocalizationService : LocatedSingletonServiceBase
         }
     }
 
-    #endregion // LocatedSingletonServiceBase
+    #endregion // ISingletonInitialization
 }

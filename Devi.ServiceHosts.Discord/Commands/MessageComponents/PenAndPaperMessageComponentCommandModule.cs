@@ -1,15 +1,19 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
 
 using Discord.Interactions;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Commands.MessageComponents;
 
 /// <summary>
 /// Pen and paper component commands
 /// </summary>
+[Injectable<PenAndPaperMessageComponentCommandModule>(ServiceLifetime.Transient)]
 public class PenAndPaperMessageComponentCommandModule : LocatedInteractionModuleBase
 {
     #region Properties

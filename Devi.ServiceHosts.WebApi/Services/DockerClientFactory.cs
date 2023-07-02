@@ -1,14 +1,17 @@
 ﻿using System;
-using Devi.ServiceHosts.Core.ServiceProvider;
+using Devi.Core.DependencyInjection;
 
 using Docker.DotNet;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.WebApi.Services;
 
 /// <summary>
 /// Mongo client factory
 /// </summary>
-public sealed class DockerClientFactory : LocatedSingletonServiceBase
+[Injectable<DockerClientFactory>(ServiceLifetime.Singleton)]
+public sealed class DockerClientFactory
 {
     #region Fields
 

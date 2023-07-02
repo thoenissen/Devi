@@ -2,38 +2,37 @@
 
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
-namespace Devi.ServiceHosts.DTOs.PenAndPaper
+namespace Devi.ServiceHosts.DTOs.PenAndPaper;
+
+/// <summary>
+/// Post log message
+/// </summary>
+public class PostLogMessageDTO
 {
     /// <summary>
-    /// Post log message
+    /// Type
     /// </summary>
-    public class PostLogMessageDTO
-    {
-        /// <summary>
-        /// Type
-        /// </summary>
-        public LogMessageType Type { get; set; }
-
-        /// <summary>
-        /// Content
-        /// </summary>
-        public JsonObject Content { get; set; }
-    }
+    public LogMessageType Type { get; set; }
 
     /// <summary>
-    /// Post log message
+    /// Content
     /// </summary>
-    /// <typeparam name="T">Sub type</typeparam>
-    public class PostLogMessageDTO<T>
-    {
-        /// <summary>
-        /// Type
-        /// </summary>
-        public LogMessageType Type { get; set; }
+    public JsonObject Content { get; set; }
+}
 
-        /// <summary>
-        /// Content
-        /// </summary>
-        public T Content { get; set; }
-    }
+/// <summary>
+/// Post log message
+/// </summary>
+/// <typeparam name="T">Sub type</typeparam>
+public class PostLogMessageDTO<T>
+{
+    /// <summary>
+    /// Type
+    /// </summary>
+    public LogMessageType Type { get; set; }
+
+    /// <summary>
+    /// Content
+    /// </summary>
+    public T Content { get; set; }
 }

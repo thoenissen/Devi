@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Commands.Modals.Data;
 using Devi.ServiceHosts.Discord.Handlers;
 
 using Discord.Interactions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Commands.Modals;
 
 /// <summary>
 /// Pen and paper modals
 /// </summary>
+[Injectable<PenAndPaperModals>(ServiceLifetime.Transient)]
 public class PenAndPaperModals : LocatedInteractionModuleBase
 {
     #region Properties

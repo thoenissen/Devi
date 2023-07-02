@@ -3,19 +3,22 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.Reminders;
-
 using Discord.Commands;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Reminder commands
 /// </summary>
+[Injectable<ReminderCommandHandler>(ServiceLifetime.Transient)]
 public class ReminderCommandHandler : LocatedServiceBase
 {
     #region Fields

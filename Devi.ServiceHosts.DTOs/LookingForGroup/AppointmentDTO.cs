@@ -1,13 +1,12 @@
-﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup
+﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup;
+
+/// <summary>
+/// Appointment
+/// </summary>
+public class AppointmentDTO
 {
     /// <summary>
-    /// Appointment
+    /// Thread ID
     /// </summary>
-    public class AppointmentDTO
-    {
-        /// <summary>
-        /// Thread ID
-        /// </summary>
-        public ulong ThreadId { get; set; }
-    }
+    public ulong ThreadId { get; set; }
 }

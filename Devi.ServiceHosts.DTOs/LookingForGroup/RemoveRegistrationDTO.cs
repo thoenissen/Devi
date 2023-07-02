@@ -1,18 +1,17 @@
-﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup
+﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup;
+
+/// <summary>
+/// Remove registration
+/// </summary>
+public class RemoveRegistrationDTO
 {
     /// <summary>
-    /// Remove registration
+    /// Appointment message ID
     /// </summary>
-    public class RemoveRegistrationDTO
-    {
-        /// <summary>
-        /// Appointment message ID
-        /// </summary>
-        public ulong AppointmentMessageId { get; set; }
+    public ulong AppointmentMessageId { get; set; }
 
-        /// <summary>
-        /// User ID
-        /// </summary>
-        public ulong UserId { get; set; }
-    }
+    /// <summary>
+    /// User ID
+    /// </summary>
+    public ulong UserId { get; set; }
 }

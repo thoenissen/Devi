@@ -40,9 +40,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1E547D
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devi.EventQueue", "Devi.EventQueue\Devi.EventQueue.csproj", "{D4299A4D-6AF7-4B4C-BF1C-3446EDAFEB22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.EventQueue", "Devi.EventQueue\Devi.EventQueue.csproj", "{D4299A4D-6AF7-4B4C-BF1C-3446EDAFEB22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devi.TestConsole", "Devi.TestConsole\Devi.TestConsole.csproj", "{BD57E26B-51D7-416A-8D06-26F75BB24AB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.TestConsole", "Devi.TestConsole\Devi.TestConsole.csproj", "{BD57E26B-51D7-416A-8D06-26F75BB24AB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devi.Core", "Devi.Core\Devi.Core.csproj", "{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +80,10 @@ Global
 		{BD57E26B-51D7-416A-8D06-26F75BB24AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD57E26B-51D7-416A-8D06-26F75BB24AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD57E26B-51D7-416A-8D06-26F75BB24AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{1E547D5B-AC99-4C50-9C43-65D819DE97DE} = {034B56CA-CECF-4540-8642-6896842BB78E}
 		{D4299A4D-6AF7-4B4C-BF1C-3446EDAFEB22} = {534BB16E-63F4-4324-A86C-33EF07B8D91F}
 		{BD57E26B-51D7-416A-8D06-26F75BB24AB8} = {5D6ACBB0-734E-47FA-A899-0DF0AEF519B2}
+		{271DEB66-AA6D-493B-B1C5-A4DA9EB6C8B3} = {534BB16E-63F4-4324-A86C-33EF07B8D91F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {611DD04B-90FD-4C54-9A3A-594CC2ED7C7B}

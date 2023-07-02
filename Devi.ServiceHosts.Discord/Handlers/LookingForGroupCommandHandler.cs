@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
@@ -8,14 +9,16 @@ using Devi.ServiceHosts.Discord.Commands.Modals.Data;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.Discord.Services.LookingForGroup;
 using Devi.ServiceHosts.DTOs.LookingForGroup;
-
 using Discord;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Looking for group command handler
 /// </summary>
+[Injectable<LookingForGroupCommandHandler>(ServiceLifetime.Transient)]
 public class LookingForGroupCommandHandler : LocatedServiceBase
 {
     #region Fields

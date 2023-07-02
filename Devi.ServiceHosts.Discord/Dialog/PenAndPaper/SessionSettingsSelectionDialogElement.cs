@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Dialog.Base;
-
 using Discord;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 
 /// <summary>
 /// Configuration selection
 /// </summary>
+[Injectable<SessionSettingsSelectionDialogElement>(ServiceLifetime.Transient)]
 public class SessionSettingsSelectionDialogElement : DialogEmbedSelectMenuElementBase<bool>
 {
     #region Fields

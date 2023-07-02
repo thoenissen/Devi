@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Dialog.Base;
 using Devi.ServiceHosts.Discord.Extensions;
@@ -10,11 +11,14 @@ using Devi.ServiceHosts.Discord.Extensions;
 using Discord;
 using Discord.WebSocket;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
 
 /// <summary>
 /// Configuration selection
 /// </summary>
+[Injectable<CampaignPlayerSelectionDialogElement>(ServiceLifetime.Transient)]
 public class CampaignPlayerSelectionDialogElement : DialogEmbedMultiSelectSelectMenuElementBase<ulong>
 {
     #region Constructor

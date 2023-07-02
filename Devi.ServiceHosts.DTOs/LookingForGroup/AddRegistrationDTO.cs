@@ -1,18 +1,17 @@
-﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup
+﻿namespace Devi.ServiceHosts.DTOs.LookingForGroup;
+
+/// <summary>
+/// Add registration
+/// </summary>
+public class AddRegistrationDTO
 {
     /// <summary>
-    /// Add registration
+    /// Appointment message ID
     /// </summary>
-    public class AddRegistrationDTO
-    {
-        /// <summary>
-        /// Appointment message ID
-        /// </summary>
-        public ulong AppointmentMessageId { get; set; }
+    public ulong AppointmentMessageId { get; set; }
 
-        /// <summary>
-        /// User ID
-        /// </summary>
-        public ulong UserId { get; set; }
-    }
+    /// <summary>
+    /// User ID
+    /// </summary>
+    public ulong UserId { get; set; }
 }

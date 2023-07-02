@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
@@ -9,14 +10,16 @@ using Devi.ServiceHosts.Discord.Commands.Modals.Data;
 using Devi.ServiceHosts.Discord.Exceptions;
 using Devi.ServiceHosts.Discord.Services.Discord;
 using Devi.ServiceHosts.DTOs.Docker;
-
 using Discord;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Administration commands
 /// </summary>
+[Injectable<AdminCommandHandler>(ServiceLifetime.Transient)]
 public class AdminCommandHandler : LocatedServiceBase
 {
     #region Fields

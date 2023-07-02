@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.Discord.Dialog.Base;
 using Devi.ServiceHosts.Discord.Dialog.Configuration;
 using Devi.ServiceHosts.Discord.Services.Discord;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Handlers;
 
 /// <summary>
 /// Configuration commands
 /// </summary>
+[Injectable<ConfigurationCommandHandler>(ServiceLifetime.Transient)]
 public class ConfigurationCommandHandler : LocatedServiceBase
 {
     #region Constructor

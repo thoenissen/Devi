@@ -1,5 +1,8 @@
 ﻿using System;
-using Devi.ServiceHosts.Core.ServiceProvider;
+
+using Devi.Core.DependencyInjection;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using MongoDB.Driver;
 
@@ -8,7 +11,8 @@ namespace Devi.ServiceHosts.WebApi.Services;
 /// <summary>
 /// Mongo client factory
 /// </summary>
-public sealed class MongoClientFactory : LocatedSingletonServiceBase
+[Injectable<MongoClientFactory>(ServiceLifetime.Singleton)]
+public sealed class MongoClientFactory
 {
     #region Fields
 

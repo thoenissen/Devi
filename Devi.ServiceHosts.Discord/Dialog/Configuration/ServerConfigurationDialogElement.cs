@@ -4,17 +4,21 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Dialog.Base;
 
 using Discord;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devi.ServiceHosts.Discord.Dialog.Configuration;
 
 /// <summary>
 /// Server configuration
 /// </summary>
+[Injectable<ServerConfigurationDialogElement>(ServiceLifetime.Transient)]
 public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase<bool>
 {
     #region Constructor

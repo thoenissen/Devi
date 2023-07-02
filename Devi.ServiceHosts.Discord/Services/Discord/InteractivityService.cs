@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Extensions;
+using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
 
 using Discord;
@@ -18,7 +20,9 @@ namespace Devi.ServiceHosts.Discord.Services.Discord;
 /// <summary>
 /// User interaction service
 /// </summary>
-public sealed class InteractivityService : LocatedSingletonServiceBase, IDisposable
+[Injectable<InteractivityService>(ServiceLifetime.Singleton)]
+public sealed class InteractivityService : LocatedSingletonServiceBase,
+                                           IDisposable
 {
     #region Fields
 
@@ -74,6 +78,19 @@ public sealed class InteractivityService : LocatedSingletonServiceBase, IDisposa
 
     #endregion // Fields
 
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public InteractivityService(LocalizationService localizationService)
+        : base(localizationService)
+    {
+    }
+
+    #endregion // Constructor
+
     #region Public methods
 
     /// <summary>
@@ -86,6 +103,33 @@ public sealed class InteractivityService : LocatedSingletonServiceBase, IDisposa
     public static string GetPermanentCustomId(string group, string command, params string[] additionalData)
     {
         return $"{group};{command};{string.Join(';', additionalData)}";
+    }
+
+    /// <summary>
+    /// Set discord client
+    /// </summary>
+    /// <param name="client">Client</param>
+    public void SetDiscordClient(DiscordSocketClient client)
+    {
+        _client = client;
+
+        _tokenSource = new CancellationTokenSource();
+
+        _waitForMessage = new List<InteractionWaitEntry<IUserMessage>>();
+        _messageEvent = new AutoResetEvent(false);
+        _messages = new ConcurrentQueue<IUserMessage>();
+
+        _waitForReaction = new List<InteractionWaitEntry<IReaction>>();
+        _reactionEvent = new AutoResetEvent(false);
+        _reactions = new ConcurrentQueue<IReaction>();
+
+        _componentContainers = new List<TemporaryComponentsContainer>();
+
+        Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token).Forget();
+        Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token).Forget();
+
+        _client.MessageReceived += OnMessageReceived;
+        _client.ReactionAdded += OnReactionAdded;
     }
 
     /// <summary>
@@ -325,41 +369,6 @@ public sealed class InteractivityService : LocatedSingletonServiceBase, IDisposa
     }
 
     #endregion // Private methods
-
-    #region SingleLocatedServiceBase
-
-    /// <summary>
-    /// Initialize
-    /// </summary>
-    /// <param name="serviceProvider">Service provider</param>
-    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task Initialize(IServiceProvider serviceProvider)
-    {
-        await base.Initialize(serviceProvider)
-                  .ConfigureAwait(false);
-
-        _tokenSource = new CancellationTokenSource();
-
-        _waitForMessage = new List<InteractionWaitEntry<IUserMessage>>();
-        _messageEvent = new AutoResetEvent(false);
-        _messages = new ConcurrentQueue<IUserMessage>();
-
-        _waitForReaction = new List<InteractionWaitEntry<IReaction>>();
-        _reactionEvent = new AutoResetEvent(false);
-        _reactions = new ConcurrentQueue<IReaction>();
-
-        _componentContainers = new List<TemporaryComponentsContainer>();
-
-        Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token).Forget();
-        Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token).Forget();
-
-        _client = serviceProvider.GetRequiredService<DiscordClient>().Client;
-        _client.MessageReceived += OnMessageReceived;
-        _client.ReactionAdded += OnReactionAdded;
-    }
-
-    #endregion // SingleLocatedServiceBase
 
     #region IDisposable
 

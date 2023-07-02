@@ -36,12 +36,13 @@
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.OpenSearch" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Devi.Core\Devi.Core.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.Clients\Devi.ServiceHosts.Clients.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.Core\Devi.ServiceHosts.Core.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.DTOs\Devi.ServiceHosts.DTOs.csproj" />

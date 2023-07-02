@@ -1,15 +1,19 @@
 ﻿using System.Threading.Tasks;
 
+using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Discord.Commands.Base;
 using Devi.ServiceHosts.Discord.Handlers;
 
 using Discord.Interactions;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.Discord.Commands.MessageComponents;
 
 /// <summary>
 /// Looking for group commands
 /// </summary>
+[Injectable<LookingForGroupComponentCommandModule>(ServiceLifetime.Transient)]
 public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBase
 {
     #region Constants
