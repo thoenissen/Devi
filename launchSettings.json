@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "devi.servicehosts.discord.interaction": "StartDebugging",
+        "devi.servicehosts.discord.worker": "StartDebugging",
+        "devi.servicehosts.webapi": "StartDebugging"
+      }
+    }
+  }
+}

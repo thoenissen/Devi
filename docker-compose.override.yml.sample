@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  devi.servicehosts.discord.interaction:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DEVI_DISCORD_TOKEN=TODO
+      - DEVI_DEBUG_CHANNEL=TODO
+      - DEVI_WEBAPI_BASE_URL=http://devi.servicehosts.webapi:80/
+      - DEVI_OPENSEARCH_URL=TODO
+      - DEVI_OPENSEARCH_USER=TODO
+      - DEVI_OPENSEARCH_PASSWORD=TODO
+      - DEVI_ENVIRONMENT=Test
+      - DEVI_OWNER_USER_ID=TODO
+      - TZ=Europe/Berlin
+    ports:
+      - "80"
+
+  devi.servicehosts.discord.worker:
+    environment:
+      - DEVI_DISCORD_TOKEN=TODO
+      - DEVI_RABBITMQ_HOST_NAME=TODO
+      - DEVI_RABBITMQ_VIRTUAL_HOST=TODO
+      - TZ=Europe/Berlin
+
+  devi.servicehosts.webapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DEVI_DB_CATALOG=TODO
+      - DEVI_DB_DATA_SOURCE=TODO
+      - DEVI_DB_PASSWORD=TODO
+      - DEVI_DB_USER=TODO
+      - DEVI_DISCORD_BASE_URL=http://devi.servicehosts.discord.interaction:80/
+      - DEVI_OPENSEARCH_URL=TODO
+      - DEVI_OPENSEARCH_USER=TODO
+      - DEVI_OPENSEARCH_PASSWORD=TODO
+      - DEVI_ENVIRONMENT=Test
+      - DEVI_MONGODB_DATABASE=TODO
+      - DEVI_MONGODB_CONNECTION=TODO
+      - DEVI_DOCKER_CONNECTION=TODO
+      - DEVI_RABBITMQ_HOST_NAME=TODO
+      - DEVI_RABBITMQ_VIRTUAL_HOST=TODO
+      - TZ=Europe/Berlin
+    ports:
+      - "80"
+

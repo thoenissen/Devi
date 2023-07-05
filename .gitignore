@@ -399,6 +399,7 @@ Docker_Productive.env
 .env
 environment.js
 environment.template.js
+docker-compose.override.yml
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 

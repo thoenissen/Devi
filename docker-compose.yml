@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  devi.servicehosts.discord.interaction:
+    image: ${DOCKER_REGISTRY-}deviservicehostsdiscordinteraction
+    build:
+      context: .
+      dockerfile: Devi.ServiceHosts.Discord.Interaction/Dockerfile
+
+  devi.servicehosts.discord.worker:
+    image: ${DOCKER_REGISTRY-}deviservicehostsdiscordworker
+    build:
+      context: .
+      dockerfile: Devi.ServiceHosts.Discord.Worker/Dockerfile
+
+
+  devi.servicehosts.webapi:
+    image: ${DOCKER_REGISTRY-}deviservicehostswebapi
+    build:
+      context: .
+      dockerfile: Devi.ServiceHosts.WebApi/Dockerfile
+
