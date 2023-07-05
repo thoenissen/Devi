@@ -32,9 +32,10 @@ public abstract class EventQueueSubscriber<TConfiguration, TData> : EventQueueSu
     /// On message received
     /// </summary>
     /// <param name="data">Data</param>
-    private void OnMessageReceived(ReadOnlyMemory<byte> data)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task OnMessageReceived(ReadOnlyMemory<byte> data)
     {
-        Execute(JsonSerializer.Deserialize<TData>(data.Span));
+        await Execute(JsonSerializer.Deserialize<TData>(data.Span)).ConfigureAwait(false);
     }
 
     #endregion // Methods
@@ -45,7 +46,8 @@ public abstract class EventQueueSubscriber<TConfiguration, TData> : EventQueueSu
     /// Execute event
     /// </summary>
     /// <param name="data">Data</param>
-    protected abstract void Execute(TData? data);
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected abstract Task Execute(TData? data);
 
     /// <summary>
     /// Set event queue

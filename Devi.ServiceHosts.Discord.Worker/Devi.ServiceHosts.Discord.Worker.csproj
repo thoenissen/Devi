@@ -1,27 +1,37 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <DockerfileTag>devi.servicehosts.discord.worker</DockerfileTag>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DocumentationFile>bin\Debug\Devi.EventQueue.xml</DocumentationFile>
+      <DocumentationFile>bin\Debug\Devi.ServiceHosts.Discord.Worker.xml</DocumentationFile>
       <CodeAnalysisRuleSet>..\StyleCop.Debug.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <DocumentationFile>bin\Release\Devi.EventQueue.xml</DocumentationFile>
+      <DocumentationFile>bin\Release\Devi.ServiceHosts.Discord.Worker.xml</DocumentationFile>
       <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\Languages\de-DE.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
+    <EmbeddedResource Include="Resources\Languages\de-DE.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net.Rest" Version="3.10.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Devi.EventQueue\Devi.EventQueue.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.Core\Devi.ServiceHosts.Core.csproj" />
   </ItemGroup>
 

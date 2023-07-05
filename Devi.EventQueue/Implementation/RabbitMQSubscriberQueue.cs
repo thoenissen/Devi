@@ -52,12 +52,8 @@ internal class RabbitMQSubscriberQueue : ISubscriberQueueImplementation
     /// <param name="e">Arguments</param>
     private void OnConsumerReceived(object? sender, BasicDeliverEventArgs e)
     {
-        if (OnMessageReceived != null)
-        {
-            OnMessageReceived.Invoke(e.Body);
-
-            _model?.BasicAck(e.DeliveryTag, false);
-        }
+        OnMessageReceived?.Invoke(e.Body)
+                         .ContinueWith(t => _model?.BasicAck(e.DeliveryTag, false));
     }
 
     #endregion // Methods
@@ -67,7 +63,7 @@ internal class RabbitMQSubscriberQueue : ISubscriberQueueImplementation
     /// <summary>
     /// On message received action
     /// </summary>
-    public Action<ReadOnlyMemory<byte>>? OnMessageReceived { private get; set; }
+    public Func<ReadOnlyMemory<byte>, Task>? OnMessageReceived { private get; set; }
 
     /// <summary>
     /// SetImplementation

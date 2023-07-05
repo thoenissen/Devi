@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Devi.ServiceHosts.Discord.Worker": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "DockerfileRunArguments": "--env-file Docker.env"
+    }
+  }
+}

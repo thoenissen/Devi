@@ -5,7 +5,7 @@ namespace Devi.ServiceHosts.Core.Localization;
 /// <summary>
 /// Command module base class with localization services
 /// </summary>
-public class LocatedControllerBase : ControllerBase
+public abstract class LocatedControllerBase : ControllerBase
 {
     #region Constructor
 
@@ -13,7 +13,7 @@ public class LocatedControllerBase : ControllerBase
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public LocatedControllerBase(LocalizationService localizationService)
+    protected LocatedControllerBase(LocalizationService localizationService)
     {
         LocalizationGroup = localizationService?.GetGroup(GetType().Name);
     }

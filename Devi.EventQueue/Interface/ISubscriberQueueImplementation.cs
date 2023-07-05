@@ -10,7 +10,7 @@ internal interface ISubscriberQueueImplementation
     /// <summary>
     /// On message received action
     /// </summary>
-    Action<ReadOnlyMemory<byte>>? OnMessageReceived { set; }
+    Func<ReadOnlyMemory<byte>, Task>? OnMessageReceived { set; }
 
     /// <summary>
     /// SetImplementation

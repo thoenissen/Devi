@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using Devi.Core.DependencyInjection;
+using Devi.EventQueue.Extensions;
 using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.Core.ServiceProvider;
 using Devi.ServiceHosts.WebApi.Data.Entity;
@@ -83,6 +84,9 @@ public class Program
                                                       Assembly.Load("Devi.Core"),
                                                       Assembly.Load("Devi.ServiceHosts.Core"),
                                                       Assembly.Load("Devi.ServiceHosts.Clients"));
+
+        builder.Services.AddRabbitMQPublisher(Environment.GetEnvironmentVariable("DEVI_RABBITMQ_HOST_NAME")!,
+                                              Environment.GetEnvironmentVariable("DEVI_RABBITMQ_VIRTUAL_HOST")!);
 
         var jobScheduler = new JobScheduler();
         await using (jobScheduler.ConfigureAwait(false))

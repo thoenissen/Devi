@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using Devi.EventQueue.Core;
+using Devi.EventQueue.Events;
+using Devi.EventQueue.Events.Data;
+using Devi.EventQueue.Events.Publisher;
 using Devi.ServiceHosts.Clients.Discord;
 using Devi.ServiceHosts.DTOs.Reminders;
 using Devi.ServiceHosts.WebApi.Data.Entity;
@@ -75,14 +79,13 @@ public class OneTimeReminderJob : LocatedAsyncJob
 
                         try
                         {
-                            await GetService<DiscordConnector>().Reminders
-                                                                .PostOneTimeReminder(new PostReminderMessageDTO
-                                                                                     {
-                                                                                         UserId = jobEntity.DiscordUserId,
-                                                                                         ChannelId = jobEntity.ChannelId,
-                                                                                         Message = jobEntity.Message
-                                                                                     })
-                                                                .ConfigureAwait(false);
+                            GetService<EventQueuePublishingService>().GetPublisher<PostReminderEventPublisher>()
+                                                                     .Publish(new PostReminderEventData
+                                                                              {
+                                                                                  UserId = jobEntity.DiscordUserId,
+                                                                                  ChannelId = jobEntity.ChannelId,
+                                                                                  Message = jobEntity.Message
+                                                                              });
 
                             isExecuted = true;
                         }

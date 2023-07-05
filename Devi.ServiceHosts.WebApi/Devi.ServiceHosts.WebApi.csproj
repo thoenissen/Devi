@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Devi.EventQueue\Devi.EventQueue.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.Clients\Devi.ServiceHosts.Clients.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.Core\Devi.ServiceHosts.Core.csproj" />
     <ProjectReference Include="..\Devi.ServiceHosts.DTOs\Devi.ServiceHosts.DTOs.csproj" />

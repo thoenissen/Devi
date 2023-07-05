@@ -34,7 +34,7 @@ public class EventQueueConfiguration
     /// <summary>
     /// Consumer count
     /// </summary>
-    public int ConsumerCounter { get; set; } = 1;
+    public int ConsumerCounter { get; protected set; } = 1;
 
     #endregion // Constructor
 }

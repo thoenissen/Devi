@@ -16,10 +16,8 @@ namespace Devi.ServiceHosts.Clients.Discord;
 /// Discord connector
 /// </summary>
 [Injectable<DiscordConnector>(ServiceLifetime.Singleton)]
-[Injectable<IRemindersConnector>(ServiceLifetime.Singleton)]
 [Injectable<IPenAndPaperConnector>(ServiceLifetime.Singleton)]
 public sealed class DiscordConnector : ConnectorBase,
-                                       IRemindersConnector,
                                        IPenAndPaperConnector
 {
     #region Constructor
@@ -38,11 +36,6 @@ public sealed class DiscordConnector : ConnectorBase,
     #region Properties
 
     /// <summary>
-    /// Reminders
-    /// </summary>
-    public IRemindersConnector Reminders => this;
-
-    /// <summary>
     /// Pen and paper
     /// </summary>
     public IPenAndPaperConnector PenAndPaper => this;
@@ -50,13 +43,6 @@ public sealed class DiscordConnector : ConnectorBase,
     #endregion // Properties
 
     #region Methods
-
-    /// <summary>
-    /// Creation of a one time reminder
-    /// </summary>
-    /// <param name="dto">DTO</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task IRemindersConnector.PostOneTimeReminder(PostReminderMessageDTO dto) => Post("reminders", dto);
 
     /// <summary>
     /// Refresh campaign message
