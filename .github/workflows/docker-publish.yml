@@ -18,14 +18,20 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         
-    - name: Build Devi ServiceHosts Discord
-      run: docker build . --file ./Devi.ServiceHosts.Discord/Dockerfile --tag thoenissen/devi.servicehosts.discord:latest
+    - name: Build Devi ServiceHosts Discord Interaction
+      run: docker build . --file ./Devi.ServiceHosts.Discord.Interaction/Dockerfile --tag thoenissen/devi.servicehosts.discord.interaction:latest
+      
+    - name: Build Devi ServiceHosts Discord Worker
+      run: docker build . --file ./Devi.ServiceHosts.Discord.Worker/Dockerfile --tag thoenissen/devi.servicehosts.discord.worker:latest
 
-    - name: Build Devi ServiceHosts Discord
+    - name: Build Devi ServiceHosts Discord 
       run: docker build . --file ./Devi.ServiceHosts.WebApi/Dockerfile --tag thoenissen/devi.servicehosts.webapi:latest
 
-    - name: Push ServiceHosts Discord
-      run: docker push thoenissen/devi.servicehosts.discord
+    - name: Push ServiceHosts Discord Interaction
+      run: docker push thoenissen/devi.servicehosts.discord.interaction
+      
+    - name: Push ServiceHosts Discord Worker
+      run: docker push thoenissen/devi.servicehosts.discord.worker
 
     - name: Push ServiceHosts WebApi
       run: docker push thoenissen/devi.servicehosts.webapi
