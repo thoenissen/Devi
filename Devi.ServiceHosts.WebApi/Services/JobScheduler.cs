@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.ServiceProvider;
+using Devi.ServiceHosts.WebApi.Data.Entity;
+using Devi.ServiceHosts.WebApi.Data.Entity.Repositories.Reminder;
 using Devi.ServiceHosts.WebApi.Jobs.Base;
+using Devi.ServiceHosts.WebApi.Jobs.Reminders;
 
 using FluentScheduler;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devi.ServiceHosts.WebApi.Services;
@@ -53,12 +58,29 @@ public sealed class JobScheduler : ISingletonInitialization,
     /// </summary>
     /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task Initialize()
+    public async Task Initialize()
     {
         JobManager.JobFactory = this;
         JobManager.Initialize();
 
-        return Task.CompletedTask;
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var reminders = await dbFactory.GetRepository<OneTimeReminderRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.IsExecuted == false)
+                                           .Select(obj => new
+                                                          {
+                                                              obj.Id,
+                                                              obj.TimeStamp
+                                                          })
+                                           .ToListAsync()
+                                           .ConfigureAwait(false);
+
+            foreach (var reminder in reminders)
+            {
+                AddJob(new OneTimeReminderJob(reminder.Id), reminder.TimeStamp);
+            }
+        }
     }
 
     #endregion // ISingletonInitialization

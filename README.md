@@ -1,2 +1,2 @@
 # Devi
-Pen &amp; Paper - Discord Bot
+Multipurpose discord bot with an over complicated tech stack

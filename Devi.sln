@@ -37,6 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devi.ServiceHosts.Clients",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1E547D5B-AC99-4C50-9C43-65D819DE97DE}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-validation.yml = .github\workflows\build-validation.yml
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 	EndProjectSection
 EndProject
