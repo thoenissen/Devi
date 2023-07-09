@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Discord.Commands.Base;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Base;
 
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// General module for processing temporary message components

@@ -15,7 +15,7 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// User interaction service

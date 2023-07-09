@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
-namespace Devi.ServiceHosts.Discord.Commands.Modals.Data;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.Modals.Data;
 
 /// <summary>
 /// Creation of a docker container

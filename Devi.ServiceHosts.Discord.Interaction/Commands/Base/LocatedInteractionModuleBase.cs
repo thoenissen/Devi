@@ -1,9 +1,9 @@
 ﻿using Devi.ServiceHosts.Core.Localization;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 using Discord.Interactions;
 
-namespace Devi.ServiceHosts.Discord.Commands.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.Base;
 
 /// <summary>
 /// Interaction module base class with localization services

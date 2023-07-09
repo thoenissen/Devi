@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Select menu option

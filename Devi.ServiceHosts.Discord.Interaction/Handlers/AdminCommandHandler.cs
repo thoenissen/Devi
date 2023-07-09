@@ -6,15 +6,16 @@ using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
-using Devi.ServiceHosts.Discord.Commands.Modals.Data;
-using Devi.ServiceHosts.Discord.Exceptions;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Modals.Data;
+using Devi.ServiceHosts.Discord.Interaction.Exceptions;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 using Devi.ServiceHosts.DTOs.Docker;
+
 using Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Handlers;
+namespace Devi.ServiceHosts.Discord.Interaction.Handlers;
 
 /// <summary>
 /// Administration commands

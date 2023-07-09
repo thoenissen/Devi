@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
-using Devi.ServiceHosts.Discord.Commands.Base;
-using Devi.ServiceHosts.Discord.Dialog.Base;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Base;
+using Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 using Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Configuration;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Configuration;
 
 /// <summary>
 /// Server configuration
@@ -79,7 +79,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                                          CultureInfo = LocalizationGroup.CultureInfo
                                                      };
 
-                                  foreach (var type in Assembly.Load("Devi.ServiceHosts.Discord")
+                                  foreach (var type in Assembly.Load("Devi.ServiceHosts.Discord.Interaction")
                                                                .GetTypes()
                                                                .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
                                                                           && obj.IsAbstract == false))
@@ -93,7 +93,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                       }
                                   }
 
-                                  foreach (var type in Assembly.Load("Devi.ServiceHosts.Discord")
+                                  foreach (var type in Assembly.Load("Devi.ServiceHosts.Discord.Interaction")
                                                                .GetTypes()
                                                                .Where(obj => typeof(MessageCommandModuleBase).IsAssignableFrom(obj)
                                                                           && obj.IsAbstract == false))

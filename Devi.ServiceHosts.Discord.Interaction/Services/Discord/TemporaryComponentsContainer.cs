@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Discord.Exceptions;
+using Devi.ServiceHosts.Discord.Interaction.Exceptions;
 
 using Discord.WebSocket;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// Container for temporary message components

@@ -5,7 +5,7 @@ using System.Linq;
 using Discord;
 using Discord.Interactions;
 
-namespace Devi.ServiceHosts.Discord.Extensions;
+namespace Devi.ServiceHosts.Discord.Interaction.Extensions;
 
 /// <summary>
 /// Discord command extensions

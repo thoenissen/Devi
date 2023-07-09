@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
-using Devi.ServiceHosts.Discord.Exceptions;
+using Devi.ServiceHosts.Discord.Interaction.Exceptions;
 
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// Interaction context

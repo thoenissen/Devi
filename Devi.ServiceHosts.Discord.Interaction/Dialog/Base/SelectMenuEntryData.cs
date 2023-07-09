@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Discord;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Data of a select menu entry

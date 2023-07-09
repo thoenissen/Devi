@@ -1,6 +1,6 @@
 ﻿using Devi.ServiceHosts.Core.Exceptions;
 
-namespace Devi.ServiceHosts.Discord.Exceptions;
+namespace Devi.ServiceHosts.Discord.Interaction.Exceptions;
 
 /// <summary>
 /// The use doesn't have the required permission to perform this action.

@@ -9,7 +9,7 @@ using Discord.WebSocket;
 
 using Newtonsoft.Json;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// Providing emoji
@@ -32,7 +32,7 @@ public static class DiscordEmoteService
     /// </summary>
     static DiscordEmoteService()
     {
-        _emotes = new ConcurrentDictionary<string, ulong>(JsonConvert.DeserializeObject<Dictionary<string, ulong>>(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Devi.ServiceHosts.Discord.Resources.Emotes.json")).ReadToEnd()));
+        _emotes = new ConcurrentDictionary<string, ulong>(JsonConvert.DeserializeObject<Dictionary<string, ulong>>(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Devi.ServiceHosts.Discord.Interaction.Resources.Emotes.json")).ReadToEnd()));
     }
 
     #endregion // Constructor

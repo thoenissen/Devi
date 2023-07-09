@@ -3,13 +3,13 @@
 using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
-using Devi.ServiceHosts.Discord.Dialog.Base;
-using Devi.ServiceHosts.Discord.Dialog.Configuration;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
+using Devi.ServiceHosts.Discord.Interaction.Dialog.Configuration;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Handlers;
+namespace Devi.ServiceHosts.Discord.Interaction.Handlers;
 
 /// <summary>
 /// Configuration commands

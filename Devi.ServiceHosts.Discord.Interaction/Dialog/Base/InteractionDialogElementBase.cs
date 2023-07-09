@@ -1,6 +1,6 @@
 ﻿using Devi.ServiceHosts.Core.Localization;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Dialog element which response with an interactive component

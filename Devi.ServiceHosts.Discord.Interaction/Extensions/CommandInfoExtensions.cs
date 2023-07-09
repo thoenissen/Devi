@@ -2,7 +2,7 @@
 
 using Discord.Commands;
 
-namespace Devi.ServiceHosts.Discord.Extensions;
+namespace Devi.ServiceHosts.Discord.Interaction.Extensions;
 
 /// <summary>
 /// Extension of <see cref="CommandInfo"/>

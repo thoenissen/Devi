@@ -7,7 +7,7 @@ using Devi.ServiceHosts.Core.Localization;
 
 using Discord;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Dialog element with select menu

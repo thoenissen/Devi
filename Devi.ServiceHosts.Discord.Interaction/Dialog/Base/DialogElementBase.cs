@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Core.Localization;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Dialog element

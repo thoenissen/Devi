@@ -3,7 +3,7 @@ using System.Globalization;
 
 using Discord;
 
-namespace Devi.ServiceHosts.Discord.Commands.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.Base;
 
 /// <summary>
 /// Slash command build context

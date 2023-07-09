@@ -7,16 +7,17 @@ using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
-using Devi.ServiceHosts.Discord.Commands.Modals.Data;
-using Devi.ServiceHosts.Discord.Dialog.Base;
-using Devi.ServiceHosts.Discord.Dialog.PenAndPaper;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Modals.Data;
+using Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
+using Devi.ServiceHosts.Discord.Interaction.Dialog.PenAndPaper;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
+
 using Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Handlers;
+namespace Devi.ServiceHosts.Discord.Interaction.Handlers;
 
 /// <summary>
 /// Dungeon master commands

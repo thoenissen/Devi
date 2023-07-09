@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace Devi.ServiceHosts.Discord.Extensions;
+namespace Devi.ServiceHosts.Discord.Interaction.Extensions;
 
 /// <summary>
 /// <see cref="IUser"/>

@@ -1,6 +1,6 @@
 ﻿using Devi.ServiceHosts.Core.Exceptions;
 
-namespace Devi.ServiceHosts.Discord.Exceptions;
+namespace Devi.ServiceHosts.Discord.Interaction.Exceptions;
 
 /// <summary>
 /// Discord communication with the user was aborted cause of reaching the timeout

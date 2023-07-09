@@ -4,12 +4,12 @@ using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
 using Devi.ServiceHosts.Core.ServiceProvider;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Handlers;
+namespace Devi.ServiceHosts.Discord.Interaction.Handlers;
 
 /// <summary>
 /// Player commands

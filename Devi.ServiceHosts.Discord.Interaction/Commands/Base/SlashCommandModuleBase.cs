@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Devi.ServiceHosts.Discord.Extensions;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Extensions;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 using Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Commands.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.Base;
 
 /// <summary>
 /// SlashCommand base class

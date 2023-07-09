@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Devi.ServiceHosts.Discord.Extensions;
+using Devi.ServiceHosts.Discord.Interaction.Extensions;
 
 using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Commands.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.Base;
 
 /// <summary>
 /// MessageCommand base class

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
 using Devi.Core.DependencyInjection;
-using Devi.ServiceHosts.Discord.Commands.Base;
-using Devi.ServiceHosts.Discord.Handlers;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Base;
+using Devi.ServiceHosts.Discord.Interaction.Handlers;
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
 using Discord;
@@ -10,7 +10,7 @@ using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Commands.SlashCommands;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.SlashCommands;
 
 /// <summary>
 /// Player commands

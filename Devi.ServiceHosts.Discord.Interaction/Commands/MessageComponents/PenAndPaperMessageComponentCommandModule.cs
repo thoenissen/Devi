@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 
 using Devi.Core.DependencyInjection;
-using Devi.ServiceHosts.Discord.Commands.Base;
-using Devi.ServiceHosts.Discord.Handlers;
+using Devi.ServiceHosts.Discord.Interaction.Commands.Base;
+using Devi.ServiceHosts.Discord.Interaction.Handlers;
 
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devi.ServiceHosts.Discord.Commands.MessageComponents;
+namespace Devi.ServiceHosts.Discord.Interaction.Commands.MessageComponents;
 
 /// <summary>
 /// Pen and paper component commands

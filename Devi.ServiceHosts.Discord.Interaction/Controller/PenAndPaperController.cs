@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Devi.ServiceHosts.Clients.WebApi;
 using Devi.ServiceHosts.Core.Localization;
-using Devi.ServiceHosts.Discord.Services.Discord;
+using Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
 using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 
@@ -13,7 +13,7 @@ using Discord;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Devi.ServiceHosts.Discord.Controller;
+namespace Devi.ServiceHosts.Discord.Interaction.Controller;
 
 /// <summary>
 /// Dungeon master controller

@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using Devi.ServiceHosts.Discord.Exceptions;
+using Devi.ServiceHosts.Discord.Interaction.Exceptions;
 
-namespace Devi.ServiceHosts.Discord.Services.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction.Services.Discord;
 
 /// <summary>
 /// Waiting for message data

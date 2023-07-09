@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Devi.ServiceHosts.Discord.Dialog.Base;
+namespace Devi.ServiceHosts.Discord.Interaction.Dialog.Base;
 
 /// <summary>
 /// Assigning the dialog element to determinate the data

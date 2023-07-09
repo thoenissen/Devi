@@ -14,7 +14,7 @@ using OpenSearch.Net;
 using Serilog;
 using Serilog.Sinks.OpenSearch;
 
-namespace Devi.ServiceHosts.Discord;
+namespace Devi.ServiceHosts.Discord.Interaction;
 
 /// <summary>
 /// Program
