@@ -9,6 +9,7 @@ using Devi.ServiceHosts.WebApi.Data.Entity.Tables.LookingForGroup;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Devi.ServiceHosts.WebApi.Controllers;
 
@@ -26,6 +27,11 @@ public class LookingForGroupController : ControllerBase
     /// </summary>
     private readonly RepositoryFactory _repositoryFactory;
 
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<LookingForGroupController> _logger;
+
     #endregion // Fields
 
     #region Constructor
@@ -34,9 +40,12 @@ public class LookingForGroupController : ControllerBase
     /// Constructor
     /// </summary>
     /// <param name="repositoryFactory">Repository factory</param>
-    public LookingForGroupController(RepositoryFactory repositoryFactory)
+    /// <param name="logger">Logger</param>
+    public LookingForGroupController(RepositoryFactory repositoryFactory,
+                                     ILogger<LookingForGroupController> logger)
     {
         _repositoryFactory = repositoryFactory;
+        _logger = logger;
     }
 
     #endregion // Constructor
@@ -66,6 +75,8 @@ public class LookingForGroupController : ControllerBase
         {
             return Ok();
         }
+
+        _logger.LogWarning(_repositoryFactory.LastError, "Creation of appointment ({@Appointment}) failed", dto);
 
         return BadRequest();
     }
@@ -103,6 +114,8 @@ public class LookingForGroupController : ControllerBase
         {
             return Ok(appointmentData);
         }
+
+        _logger.LogWarning(_repositoryFactory.LastError, "Requested appointment ({AppointmentId}) not found", appointmentMessageId);
 
         return NotFound();
     }
@@ -142,6 +155,8 @@ public class LookingForGroupController : ControllerBase
         {
             return Ok(appointmentDTO);
         }
+
+        _logger.LogWarning(_repositoryFactory.LastError, "Refreshing appointment ({AppointmentId}) with data ({@Data}) failed", appointmentMessageId, dto);
 
         return BadRequest();
     }
@@ -193,6 +208,8 @@ public class LookingForGroupController : ControllerBase
             return Ok(dto);
         }
 
+        _logger.LogWarning(_repositoryFactory.LastError, "Delete  appointment ({AppointmentId}) failed", appointmentMessageId);
+
         return BadRequest();
     }
 
@@ -222,6 +239,8 @@ public class LookingForGroupController : ControllerBase
             return Ok(appointment);
         }
 
+        _logger.LogWarning(_repositoryFactory.LastError, "Add registration of user ({UserId}) to  appointment ({AppointmentId}) failed", dto.UserId, dto.AppointmentMessageId);
+
         return BadRequest();
     }
 
@@ -246,6 +265,8 @@ public class LookingForGroupController : ControllerBase
 
             return Ok(appointment);
         }
+
+        _logger.LogWarning(_repositoryFactory.LastError, "Removing registration of user ({UserId}) from appointment ({AppointmentId}) failed", dto.UserId, dto.AppointmentMessageId);
 
         return BadRequest();
     }
