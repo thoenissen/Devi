@@ -63,7 +63,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [Route("Campaigns")]
-    public async Task<IActionResult> CreateContainer([FromBody] CreateCampaignDTO data)
+    public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignDTO data)
     {
         var firstSessionTimeStamp = DateTime.Today.Add(data.Time);
 
@@ -256,7 +256,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
     [Route("Campaigns/{channelId}/IsDungeonMaster/{userId}")]
-    public async Task<IActionResult> CreateContainer([FromRoute] ulong channelId, ulong userId)
+    public async Task<IActionResult> IsDungeonMaster([FromRoute] ulong channelId, ulong userId)
     {
         if (await _mongoFactory.Create()
                                .GetDatabase(_mongoFactory.Database)
@@ -279,7 +279,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
     [Route("Campaigns/{channelId}/Overview/")]
-    public async Task<IActionResult> GetCurrentSession([FromRoute] ulong channelId)
+    public async Task<IActionResult> GetCampaignOverview([FromRoute] ulong channelId)
     {
         var campaign = await _mongoFactory.Create()
                                           .GetDatabase(_mongoFactory.Database)
@@ -323,7 +323,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [Route("Sessions")]
-    public async Task<IActionResult> CreateContainer([FromBody] CreateSessionDTO data)
+    public async Task<IActionResult> CreateSession([FromBody] CreateSessionDTO data)
     {
         var campaign = await _mongoFactory.Create()
                                           .GetDatabase(_mongoFactory.Database)
@@ -380,7 +380,7 @@ public class PenAndPaperController : ControllerBase
     }
 
     /// <summary>
-    /// GetSession
+    /// Get session
     /// </summary>
     /// <param name="messageId">Message ID</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -474,7 +474,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [Route("Sessions/Registration")]
-    public async Task<IActionResult> CreateContainer([FromBody] JoinSessionDTO data)
+    public async Task<IActionResult> AddRegistration([FromBody] JoinSessionDTO data)
     {
         var result = await _mongoFactory.Create()
                                         .GetDatabase(_mongoFactory.Database)
@@ -552,7 +552,7 @@ public class PenAndPaperController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpDelete]
     [Route("Sessions/Registration")]
-    public async Task<IActionResult> CreateContainer([FromBody] LeaveSessionDTO data)
+    public async Task<IActionResult> RemoveRegistration([FromBody] LeaveSessionDTO data)
     {
         var result = await _mongoFactory.Create()
                                         .GetDatabase(_mongoFactory.Database)

@@ -111,7 +111,7 @@ public class DockerController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPut]
     [Route("Containers")]
-    public async Task<IActionResult> CreateContainer(ulong serverId, [FromBody]CreateDockerContainerDTO data)
+    public async Task<IActionResult> UpdateContainer(ulong serverId, [FromBody]CreateDockerContainerDTO data)
     {
         await _mongoFactory.Create()
                             .GetDatabase(_mongoFactory.Database)
