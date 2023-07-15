@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
+using IdentityModel.Client;
 
 using Newtonsoft.Json;
 
@@ -36,6 +39,41 @@ public abstract class ConnectorBase
     /// </summary>
     private readonly Uri _baseUrl;
 
+    /// <summary>
+    /// Should a access token been used?
+    /// </summary>
+    private bool _isUseAccessToken;
+
+    /// <summary>
+    /// Access token endpoint
+    /// </summary>
+    private string _accessTokenEndPoint;
+
+    /// <summary>
+    /// Identity server address
+    /// </summary>
+    private string _identityServerAddress;
+
+    /// <summary>
+    /// Client ID
+    /// </summary>
+    private string _clientId;
+
+    /// <summary>
+    /// Client secret
+    /// </summary>
+    private string _clientSecret;
+
+    /// <summary>
+    /// Current access token
+    /// </summary>
+    private TokenResponse _accessToken;
+
+    /// <summary>
+    /// Token expiration
+    /// </summary>
+    private DateTime? _expirationTimeStamp;
+
     #endregion // Fields
 
     #region Constructor
@@ -45,10 +83,27 @@ public abstract class ConnectorBase
     /// </summary>
     /// <param name="clientFactory">Client factory</param>
     /// <param name="baseUrl">Base url</param>
-    protected ConnectorBase(IHttpClientFactory clientFactory, string baseUrl)
+    /// <param name="isUseAccessToken">Should a access token been used?</param>
+    protected ConnectorBase(IHttpClientFactory clientFactory, string baseUrl, bool isUseAccessToken)
     {
         _baseUrl = new Uri(baseUrl);
         _clientFactory = clientFactory;
+
+        if (isUseAccessToken)
+        {
+            _clientId = Environment.GetEnvironmentVariable("DEVI_WEBAPI_CLIENT_ID");
+            _clientSecret = Environment.GetEnvironmentVariable("DEVI_WEBAPI_CLIENT_SECRET");
+            _identityServerAddress = Environment.GetEnvironmentVariable("DEVI_IDENTITY_SERVER_URL");
+
+            if (string.IsNullOrEmpty(_clientId)
+             || string.IsNullOrEmpty(_clientSecret)
+             || string.IsNullOrEmpty(_identityServerAddress))
+            {
+                throw new InvalidOperationException("Invalid authentication configuration.");
+            }
+
+            _isUseAccessToken = true;
+        }
     }
 
     #endregion // Constructor
@@ -159,6 +214,32 @@ public abstract class ConnectorBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task<TOut> Send<TIn, TOut>(HttpMethod method, string route, TIn dto, NameValueCollection parameters = null)
     {
+        try
+        {
+            await RefreshAccessToken(false).ConfigureAwait(false);
+
+            return await SendInternal<TIn, TOut>(method, route, dto, parameters).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            await RefreshAccessToken(false).ConfigureAwait(false);
+
+            return await SendInternal<TIn, TOut>(method, route, dto, parameters).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Get
+    /// </summary>
+    /// <typeparam name="TIn">Input DTO type</typeparam>
+    /// <typeparam name="TOut">Output DTO type</typeparam>
+    /// <param name="method">Methods</param>
+    /// <param name="route">Route</param>
+    /// <param name="dto">DTO</param>
+    /// <param name="parameters">parameters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task<TOut> SendInternal<TIn, TOut>(HttpMethod method, string route, TIn dto, NameValueCollection parameters = null)
+    {
         using (var client = _clientFactory.CreateClient())
         {
             HttpContent content = null;
@@ -174,6 +255,11 @@ public abstract class ConnectorBase
                           };
 
             request.Content = content;
+
+            if (_accessToken?.AccessToken != null)
+            {
+                request.SetBearerToken(_accessToken.AccessToken);
+            }
 
             using (var response = await client.SendAsync(request)
                                               .ConfigureAwait(false))
@@ -226,6 +312,107 @@ public abstract class ConnectorBase
         }
 
         return uri;
+    }
+
+    /// <summary>
+    /// Refresh access token
+    /// </summary>
+    /// <param name="forceRefresh">Force creation of a new access token</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task RefreshAccessToken(bool forceRefresh)
+    {
+        if (_isUseAccessToken)
+        {
+            using (var client = _clientFactory.CreateClient())
+            {
+                if (string.IsNullOrWhiteSpace(_accessTokenEndPoint))
+                {
+                    var discoveryDocumentRequest = new DiscoveryDocumentRequest
+                                                   {
+                                                       Address = _identityServerAddress,
+                                                       Policy = new DiscoveryPolicy
+                                                                {
+                                                                    LoopbackAddresses = new HashSet<string>
+                                                                                        {
+                                                                                            "localhost",
+                                                                                            "127.0.0.1",
+                                                                                            "host.docker.internal",
+#if DEBUG
+                                                                                            "devi.servicehosts.identityserver",
+#endif // DEBUG
+                                                                                        }
+                                                                }
+                                                   };
+
+                    var discoveryDocument = await client.GetDiscoveryDocumentAsync(discoveryDocumentRequest)
+                                                        .ConfigureAwait(false);
+                    if (discoveryDocument.IsError == false)
+                    {
+                        _accessTokenEndPoint = discoveryDocument.TokenEndpoint;
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(_accessTokenEndPoint) == false)
+                {
+                    if (forceRefresh
+                     || _accessToken?.RefreshToken == null)
+                    {
+                        _accessToken = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+                                                                                       {
+                                                                                           Address = _accessTokenEndPoint,
+                                                                                           ClientId = _clientId,
+                                                                                           ClientSecret = _clientSecret,
+                                                                                           Scope = "api_internal_v1"
+                                                                                       })
+                                                   .ConfigureAwait(false);
+
+                        if (_accessToken.IsError == false)
+                        {
+                            _expirationTimeStamp = DateTime.Now
+                                                           .AddSeconds(_accessToken.ExpiresIn)
+                                                           .AddMinutes(-15);
+                        }
+                        else
+                        {
+                            _accessToken = null;
+                        }
+                    }
+                    else if (_expirationTimeStamp < DateTime.Now)
+                    {
+                        _accessToken = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
+                                                                             {
+                                                                                 Address = _accessTokenEndPoint,
+                                                                                 ClientId = _clientId,
+                                                                                 RefreshToken = _accessToken.RefreshToken
+                                                                             })
+                                                   .ConfigureAwait(false);
+
+                        if (_accessToken.IsError)
+                        {
+                            _accessToken = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+                                                                                           {
+                                                                                               Address = _accessTokenEndPoint,
+                                                                                               ClientId = _clientId,
+                                                                                               ClientSecret = _clientSecret,
+                                                                                               Scope = "api_internal_v1"
+                                                                                           })
+                                                       .ConfigureAwait(false);
+                        }
+
+                        if (_accessToken.IsError == false)
+                        {
+                            _expirationTimeStamp = DateTime.Now
+                                                           .AddSeconds(_accessToken.ExpiresIn)
+                                                           .AddMinutes(-15);
+                        }
+                        else
+                        {
+                            _accessToken = null;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     #endregion // Private methods

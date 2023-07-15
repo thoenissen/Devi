@@ -7,6 +7,7 @@ using Devi.ServiceHosts.WebApi.Services;
 
 using Docker.DotNet;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
@@ -20,6 +21,7 @@ namespace Devi.ServiceHosts.WebApi.Controllers;
 /// Docker controller
 /// </summary>
 [ApiController]
+[Authorize(Roles = "InternalService")]
 [Route("[controller]")]
 public class DockerController : ControllerBase
 {

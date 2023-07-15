@@ -9,6 +9,7 @@ using Devi.ServiceHosts.DTOs.PenAndPaper.Enumerations;
 using Devi.ServiceHosts.WebApi.Data.Entity.Collections.PenAndPaper;
 using Devi.ServiceHosts.WebApi.Services;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
@@ -21,6 +22,7 @@ namespace Devi.ServiceHosts.WebApi.Controllers;
 /// Pen and paper controller
 /// </summary>
 [ApiController]
+[Authorize(Roles = "InternalService")]
 [Route("[controller]")]
 public class PenAndPaperController : ControllerBase
 {

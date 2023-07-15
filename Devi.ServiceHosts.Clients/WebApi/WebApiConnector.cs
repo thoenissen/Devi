@@ -33,7 +33,7 @@ public sealed class WebApiConnector : ConnectorBase,
     /// </summary>
     /// <param name="clientFactory">Client factory</param>
     public WebApiConnector(IHttpClientFactory clientFactory)
-        : base(clientFactory, Environment.GetEnvironmentVariable("DEVI_WEBAPI_BASE_URL"))
+        : base(clientFactory, Environment.GetEnvironmentVariable("DEVI_WEBAPI_BASE_URL"), true)
     {
     }
 

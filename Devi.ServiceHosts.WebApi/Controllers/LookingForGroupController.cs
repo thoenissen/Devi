@@ -7,6 +7,7 @@ using Devi.ServiceHosts.WebApi.Data.Entity;
 using Devi.ServiceHosts.WebApi.Data.Entity.Repositories.LookingForGroup;
 using Devi.ServiceHosts.WebApi.Data.Entity.Tables.LookingForGroup;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ namespace Devi.ServiceHosts.WebApi.Controllers;
 /// Looking for group controller
 /// </summary>
 [ApiController]
+[Authorize(Roles = "InternalService")]
 [Route("[controller]")]
 public class LookingForGroupController : ControllerBase
 {

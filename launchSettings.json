@@ -6,7 +6,8 @@
       "serviceActions": {
         "devi.servicehosts.discord.interaction": "StartDebugging",
         "devi.servicehosts.discord.worker": "StartDebugging",
-        "devi.servicehosts.webapi": "StartDebugging"
+        "devi.servicehosts.webapi": "StartDebugging",
+        "devi.servicehosts.identityserver": "StartDebugging"
       }
     }
   }

@@ -449,3 +449,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Debug keys
+**/keys/*

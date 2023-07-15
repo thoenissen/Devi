@@ -24,7 +24,10 @@ jobs:
     - name: Build Devi ServiceHosts Discord Worker
       run: docker build . --file ./Devi.ServiceHosts.Discord.Worker/Dockerfile --tag thoenissen/devi.servicehosts.discord.worker:latest
 
-    - name: Build Devi ServiceHosts Discord 
+    - name: Build Devi ServiceHosts IdentityServer 
+      run: docker build . --file ./Devi.ServiceHosts.IdentityServer/Dockerfile --tag thoenissen/devi.servicehosts.identityserver:latest
+
+    - name: Build Devi ServiceHosts WebApi 
       run: docker build . --file ./Devi.ServiceHosts.WebApi/Dockerfile --tag thoenissen/devi.servicehosts.webapi:latest
 
     - name: Push ServiceHosts Discord Interaction
@@ -32,6 +35,9 @@ jobs:
       
     - name: Push ServiceHosts Discord Worker
       run: docker push thoenissen/devi.servicehosts.discord.worker
+
+    - name: Push ServiceHosts IdentityServer
+      run: docker push thoenissen/devi.servicehosts.identityserver
 
     - name: Push ServiceHosts WebApi
       run: docker push thoenissen/devi.servicehosts.webapi

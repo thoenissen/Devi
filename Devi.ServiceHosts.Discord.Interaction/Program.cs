@@ -53,7 +53,7 @@ internal class Program
                                            };
             }
 
-            loggerConfiguration.WriteTo.OpenSearch(new OpenSearchSinkOptions(new Uri(Environment.GetEnvironmentVariable("DEVI_OPENSEARCH_URL")))
+            loggerConfiguration.WriteTo.OpenSearch(new OpenSearchSinkOptions(new Uri(openSearchUrl))
                                                    {
                                                        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.OSv2,
                                                        AutoRegisterTemplate = true,
@@ -62,6 +62,8 @@ internal class Program
                                                        ModifyConnectionSettings = modifyConnectionSettings
                                                    });
         }
+
+        loggerConfiguration.Enrich.WithProperty("ServiceHost", "Devi.ServiceHosts.Discord.Interaction");
 
         Log.Logger = loggerConfiguration.CreateBootstrapLogger();
 

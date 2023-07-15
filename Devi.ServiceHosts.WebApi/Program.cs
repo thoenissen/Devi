@@ -12,6 +12,7 @@ using Devi.ServiceHosts.WebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 using OpenSearch.Net;
 
@@ -57,7 +58,7 @@ public class Program
                                            };
             }
 
-            loggerConfiguration.WriteTo.OpenSearch(new OpenSearchSinkOptions(new Uri(Environment.GetEnvironmentVariable("DEVI_OPENSEARCH_URL")))
+            loggerConfiguration.WriteTo.OpenSearch(new OpenSearchSinkOptions(new Uri(openSearchUrl))
                                                    {
                                                        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.OSv2,
                                                        AutoRegisterTemplate = true,
@@ -77,6 +78,21 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddHttpClient();
+
+        builder.Services.AddAuthentication("Bearer")
+                        .AddJwtBearer("Bearer", options =>
+                                                {
+                                                    options.Authority = Environment.GetEnvironmentVariable("DEVI_IDENTITY_SERVER_URL");
+
+#if DEBUG
+                                                    options.RequireHttpsMetadata = false;
+#endif // DEBUG
+
+                                                    options.TokenValidationParameters = new TokenValidationParameters
+                                                                                        {
+                                                                                            ValidateAudience = false
+                                                                                        };
+                                                });
 
         builder.Services.AddTransient<RepositoryFactory>();
 
@@ -103,7 +119,9 @@ public class Program
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
 
             await jobScheduler.Initialize()

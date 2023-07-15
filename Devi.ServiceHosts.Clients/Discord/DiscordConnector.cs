@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Devi.Core.DependencyInjection;
 using Devi.ServiceHosts.Clients.Base;
 using Devi.ServiceHosts.DTOs.PenAndPaper;
-using Devi.ServiceHosts.DTOs.Reminders;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +26,7 @@ public sealed class DiscordConnector : ConnectorBase,
     /// </summary>
     /// <param name="clientFactory">Client factory</param>
     public DiscordConnector(IHttpClientFactory clientFactory)
-        : base(clientFactory, Environment.GetEnvironmentVariable("DEVI_DISCORD_BASE_URL"))
+        : base(clientFactory, Environment.GetEnvironmentVariable("DEVI_DISCORD_BASE_URL"), false)
     {
     }
 

@@ -7,6 +7,7 @@ using Devi.ServiceHosts.WebApi.Data.Entity.Tables.Reminders;
 using Devi.ServiceHosts.WebApi.Jobs.Reminders;
 using Devi.ServiceHosts.WebApi.Services;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Devi.ServiceHosts.WebApi.Controllers;
@@ -15,6 +16,7 @@ namespace Devi.ServiceHosts.WebApi.Controllers;
 /// Reminder controller
 /// </summary>
 [ApiController]
+[Authorize(Roles = "InternalService")]
 [Route("[controller]")]
 public class RemindersController : ControllerBase
 {

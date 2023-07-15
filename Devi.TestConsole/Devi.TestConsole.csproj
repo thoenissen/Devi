@@ -5,17 +5,21 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Rest" Version="3.10.0" />
+    <PackageReference Include="Discord.Net.Rest" Version="3.11.0" />
+    <PackageReference Include="IdentityModel" Version="6.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Devi.EventQueue\Devi.EventQueue.csproj" />
+    <ProjectReference Include="..\Devi.ServiceHosts.Clients\Devi.ServiceHosts.Clients.csproj" />
   </ItemGroup>
 
 </Project>

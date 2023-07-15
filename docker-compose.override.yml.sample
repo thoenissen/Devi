@@ -6,7 +6,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DEVI_DISCORD_TOKEN=TODO
       - DEVI_DEBUG_CHANNEL=TODO
-      - DEVI_WEBAPI_BASE_URL=http://devi.servicehosts.webapi:80/
+      - DEVI_WEBAPI_BASE_URL=http://devi.servicehosts.webapi/
+      - DEVI_IDENTITY_SERVER_URL=http://devi.servicehosts.identityserver/
+      - DEVI_WEBAPI_CLIENT_ID=TODO
+      - DEVI_WEBAPI_CLIENT_SECRET=TODO
       - DEVI_OPENSEARCH_URL=TODO
       - DEVI_OPENSEARCH_USER=TODO
       - DEVI_OPENSEARCH_PASSWORD=TODO
@@ -20,27 +23,56 @@ services:
     environment:
       - DEVI_DISCORD_TOKEN=TODO
       - DEVI_RABBITMQ_HOST_NAME=TODO
-      - DEVI_RABBITMQ_VIRTUAL_HOST=TODO
+      - DEVI_RABBITMQ_VIRTUAL_HOST=Test
+      - DEVI_OPENSEARCH_URL=TODO
+      - DEVI_OPENSEARCH_USER=TODO
+      - DEVI_OPENSEARCH_PASSWORD=TODO
+      - DEVI_ENVIRONMENT=Test
       - TZ=Europe/Berlin
 
   devi.servicehosts.webapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - DEVI_DB_CATALOG=TODO
+      - DEVI_DB_CATALOG=Devi.WebApi.Test
       - DEVI_DB_DATA_SOURCE=TODO
       - DEVI_DB_PASSWORD=TODO
       - DEVI_DB_USER=TODO
-      - DEVI_DISCORD_BASE_URL=http://devi.servicehosts.discord.interaction:80/
+      - DEVI_DISCORD_BASE_URL=http://devi.servicehosts.discord.interaction/
+      - DEVI_IDENTITY_SERVER_URL=http://devi.servicehosts.identityserver/
       - DEVI_OPENSEARCH_URL=TODO
       - DEVI_OPENSEARCH_USER=TODO
       - DEVI_OPENSEARCH_PASSWORD=TODO
       - DEVI_ENVIRONMENT=Test
       - DEVI_MONGODB_DATABASE=TODO
       - DEVI_MONGODB_CONNECTION=TODO
-      - DEVI_DOCKER_CONNECTION=TODO
+      - DEVI_DOCKER_CONNECTION=tcp://host.docker.internal:2375
       - DEVI_RABBITMQ_HOST_NAME=TODO
-      - DEVI_RABBITMQ_VIRTUAL_HOST=TODO
+      - DEVI_RABBITMQ_VIRTUAL_HOST=Test
       - TZ=Europe/Berlin
     ports:
       - "80"
 
+  devi.servicehosts.identityserver:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DEVI_DB_CATALOG=Devi.IdentityServer.Test
+      - DEVI_DB_DATA_SOURCE=TODO
+      - DEVI_DB_PASSWORD=TODO
+      - DEVI_DB_USER=TODO
+      - DEVI_DISCORD_BASE_URL=http://devi.servicehosts.discord.interaction/
+      - DEVI_OPENSEARCH_URL=TODO
+      - DEVI_OPENSEARCH_USER=TODO
+      - DEVI_OPENSEARCH_PASSWORD=TODO
+      - DEVI_ENVIRONMENT=Test
+      - DEVI_WEBAPI_CLIENT_ID=TODO
+      - DEVI_WEBAPI_CLIENT_SECRET=TODO
+      - DEVI_WEBAPP_CLIENT_ID=TODO
+      - DEVI_WEBAPP_CLIENT_SECRET=TODO
+      - DEVI_WEBAPP_REDIRECT_URI=http://localhost:42040/index.html
+      - DEVI_DISCORD_OAUTH_CLIENT_ID=TODO
+      - DEVI_DISCORD_OAUTH_CLIENT_SECRET=TODO
+      - TZ=Europe/Berlin
+    ports:
+      - "80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
