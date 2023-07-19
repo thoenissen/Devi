@@ -123,10 +123,11 @@ public class Program
                                                ClientId = Environment.GetEnvironmentVariable("DEVI_WEBAPP_CLIENT_ID"),
                                                ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("DEVI_WEBAPP_CLIENT_SECRET").Sha256()) },
                                                AllowedGrantTypes = GrantTypes.Code,
-                                               RedirectUris = { Environment.GetEnvironmentVariable("DEVI_WEBAPP_REDIRECT_URI") },
+                                               RedirectUris = { Environment.GetEnvironmentVariable("DEVI_WEBAPP_REDIRECT_URI"), Environment.GetEnvironmentVariable("DEVI_WEBAPP_SILENT_REDIRECT_URI") },
                                                AllowOfflineAccess = true,
                                                AllowedScopes = { "openid", "profile", "api_public_v1" },
-                                               AllowedCorsOrigins = new[] { Environment.GetEnvironmentVariable("DEVI_WEBAPP_CORS_ORIGINS") }
+                                               AllowedCorsOrigins = { Environment.GetEnvironmentVariable("DEVI_WEBAPP_CORS_ORIGINS") },
+                                               PostLogoutRedirectUris = { Environment.GetEnvironmentVariable("DEVI_WEBAPP_POST_LOGOUT_REDIRECT_URI") },
                                            }
                                        })
                    .AddAspNetIdentity<IdentityUser>()

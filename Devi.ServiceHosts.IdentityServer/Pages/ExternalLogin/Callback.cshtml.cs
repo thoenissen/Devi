@@ -188,7 +188,6 @@ public class Callback : PageModel
         identityResult = await _userManager.AddClaimsAsync(user,
                                                            new List<Claim>
                                                            {
-                                                               new(JwtClaimTypes.Subject, user.Id),
                                                                new(ClaimTypes.Name, user.UserName)
                                                            })
                                            .ConfigureAwait(false);
