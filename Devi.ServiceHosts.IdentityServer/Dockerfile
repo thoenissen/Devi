@@ -14,7 +14,7 @@ WORKDIR "/src/Devi.ServiceHosts.IdentityServer"
 RUN dotnet build "Devi.ServiceHosts.IdentityServer.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Devi.ServiceHosts.IdentityServer.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Devi.ServiceHosts.IdentityServer.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

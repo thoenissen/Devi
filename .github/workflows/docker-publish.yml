@@ -30,6 +30,9 @@ jobs:
     - name: Build Devi ServiceHosts WebApi 
       run: docker build . --file ./Devi.ServiceHosts.WebApi/Dockerfile --tag thoenissen/devi.servicehosts.webapi:latest
 
+    - name: Build Devi ServiceHosts WebApp
+      run: docker build ./devi.servicehosts.webapp --file ./devi.servicehosts.webapp/Dockerfile --tag thoenissen/devi.servicehosts.webapp:latest
+
     - name: Push ServiceHosts Discord Interaction
       run: docker push thoenissen/devi.servicehosts.discord.interaction
       
@@ -41,3 +44,6 @@ jobs:
 
     - name: Push ServiceHosts WebApi
       run: docker push thoenissen/devi.servicehosts.webapi
+
+    - name: Push ServiceHosts WebApp
+      run: docker push thoenissen/devi.servicehosts.webapp
