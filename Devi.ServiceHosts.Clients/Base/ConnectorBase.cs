@@ -9,6 +9,8 @@ using IdentityModel.Client;
 
 using Newtonsoft.Json;
 
+using Serilog;
+
 namespace Devi.ServiceHosts.Clients.Base;
 
 /// <summary>
@@ -337,9 +339,7 @@ public abstract class ConnectorBase
                                                                                             "localhost",
                                                                                             "127.0.0.1",
                                                                                             "host.docker.internal",
-#if DEBUG
-                                                                                            "devi.servicehosts.identityserver",
-#endif // DEBUG
+                                                                                            "devi.servicehosts.identityserver"
                                                                                         }
                                                                 }
                                                    };
@@ -349,6 +349,12 @@ public abstract class ConnectorBase
                     if (discoveryDocument.IsError == false)
                     {
                         _accessTokenEndPoint = discoveryDocument.TokenEndpoint;
+
+                        Log.Information("Using the following token endpoint: {Endpoint}", discoveryDocument.TokenEndpoint);
+                    }
+                    else
+                    {
+                        Log.Error("Determination of access token endpoint failed. ({Description})", discoveryDocument.Error);
                     }
                 }
 
@@ -368,12 +374,16 @@ public abstract class ConnectorBase
 
                         if (_accessToken.IsError == false)
                         {
+                            Log.Error("Requesting new access token failed. ({Description})", _accessToken.ErrorDescription);
+
                             _expirationTimeStamp = DateTime.Now
                                                            .AddSeconds(_accessToken.ExpiresIn)
                                                            .AddMinutes(-15);
                         }
                         else
                         {
+                            Log.Information("New access token requested.");
+
                             _accessToken = null;
                         }
                     }
@@ -410,6 +420,14 @@ public abstract class ConnectorBase
                             _accessToken = null;
                         }
                     }
+                    else
+                    {
+                        Log.Debug("Using existing access token.");
+                    }
+                }
+                else
+                {
+                    Log.Error("Access token endpoint not available.");
                 }
             }
         }
