@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Devi.ServiceHosts.Discord.Interaction.Services.Moshak;
 /// Moshak command service
 /// </summary>
 [Injectable<MoashkCommandHandler>(ServiceLifetime.Transient)]
-public class MoashkCommandHandler : LocatedServiceBase
+public partial class MoashkCommandHandler : LocatedServiceBase
 {
     #region Constructor
 
@@ -48,7 +49,7 @@ public class MoashkCommandHandler : LocatedServiceBase
     {
         var timeSpan = TimeSpan.Zero;
 
-        foreach (Match match in Regex.Matches(timeSpanString, @"\d+(y|d|h|m|s)"))
+        foreach (var match in GetTimeSpans().Matches(timeSpanString).OfType<Match>())
         {
             var amount = Convert.ToUInt64(match.Value[..^1], CultureInfo.InvariantCulture);
 
@@ -160,6 +161,13 @@ public class MoashkCommandHandler : LocatedServiceBase
         await commandContext.ReplyAsync(embed: embed.Build())
                             .ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Get time spans
+    /// </summary>
+    /// <returns>Time spans</returns>
+    [GeneratedRegex("\\d+(y|d|h|m|s)")]
+    private static partial Regex GetTimeSpans();
 
     #endregion // Methods
 }
