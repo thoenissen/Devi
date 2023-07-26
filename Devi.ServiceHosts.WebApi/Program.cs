@@ -84,9 +84,8 @@ public class Program
                                                 {
                                                     options.Authority = Environment.GetEnvironmentVariable("DEVI_IDENTITY_SERVER_URL");
 
-#if DEBUG
+                                                    // TODO / HACK Use https for internal service communication.
                                                     options.RequireHttpsMetadata = false;
-#endif // DEBUG
 
                                                     options.TokenValidationParameters = new TokenValidationParameters
                                                                                         {
