@@ -3,6 +3,7 @@
 using Devi.Core.DependencyInjection;
 using Devi.EventQueue.Core;
 using Devi.EventQueue.Extensions;
+using Devi.ServiceHosts.Core.ServiceProvider;
 
 using Discord;
 using Discord.Rest;
@@ -50,7 +51,7 @@ namespace Devi.ServiceHosts.Discord.Worker
             if (string.IsNullOrEmpty(openSearchUrl) == false
              && string.IsNullOrEmpty(environment) == false)
             {
-                Func<ConnectionConfiguration, ConnectionConfiguration> modifyConnectionSettings = null;
+                Func<ConnectionConfiguration, ConnectionConfiguration>? modifyConnectionSettings = null;
 
                 var user = Environment.GetEnvironmentVariable("DEVI_OPENSEARCH_USER");
 
@@ -100,6 +101,8 @@ namespace Devi.ServiceHosts.Discord.Worker
             var serviceProvider = serviceCollection.BuildServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
+                ServiceProviderFactory.Initialize(serviceProvider);
+
                 await singletons.Initialize(serviceProvider)
                                 .ConfigureAwait(false);
 
