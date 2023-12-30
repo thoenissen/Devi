@@ -1,4 +1,5 @@
-﻿using Devi.ServiceHosts.Discord.Worker.Services;
+﻿using Devi.ServiceHosts.Core.Extensions;
+using Devi.ServiceHosts.Discord.Worker.Services;
 
 using Discord;
 using Discord.Rest;
@@ -57,6 +58,8 @@ namespace Devi.ServiceHosts.Discord.Worker.Docker
         /// </summary>
         private ITextChannel? _textChannel;
 
+        private string? _id;
+
         #endregion // Fields
 
         #region Constructor
@@ -96,6 +99,7 @@ namespace Devi.ServiceHosts.Discord.Worker.Docker
                 var containers = await _dockerClient.Containers
                                                     .ListContainersAsync(new ContainersListParameters
                                                                          {
+                                                                             All = true,
                                                                              Filters = new Dictionary<string, IDictionary<string, bool>>
                                                                                        {
                                                                                            ["name"] = new Dictionary<string, bool>
@@ -106,22 +110,13 @@ namespace Devi.ServiceHosts.Discord.Worker.Docker
                                                                          })
                                                     .ConfigureAwait(false);
 
-                var id = containers.FirstOrDefault()?.ID;
+                _id = containers.FirstOrDefault()?.ID;
 
-                if (string.IsNullOrWhiteSpace(id) == false)
+                if (string.IsNullOrWhiteSpace(_id) == false)
                 {
                     _tokenSource = new CancellationTokenSource();
 
-                    var parameters = new ContainerLogsParameters
-                                     {
-                                         ShowStderr = true,
-                                         ShowStdout = true,
-                                         Follow = true,
-                                         Since = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
-                                     };
-
-                    _task = _dockerClient.Containers
-                                         .GetContainerLogsAsync(id, parameters, CancellationToken.None, this);
+                    _task = StartLogStream(_tokenSource.Token);
                 }
                 else
                 {
@@ -131,6 +126,52 @@ namespace Devi.ServiceHosts.Discord.Worker.Docker
             catch (Exception ex)
             {
                 Log.Error(ex, "Unknown error while starting docker log forwarding.");
+            }
+        }
+
+        /// <summary>
+        /// Start logging stream
+        /// </summary>
+        /// <param name="token">Cancellation token</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task StartLogStream(CancellationToken token)
+        {
+            var parameters = new ContainerLogsParameters
+                             {
+                                 ShowStderr = true,
+                                 ShowStdout = true,
+                                 Follow = true,
+                                 Since = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                             };
+
+            var isLoggingStarted = false;
+
+            while (isLoggingStarted == false
+                && token.IsCancellationRequested == false)
+            {
+                try
+                {
+                    var data = await _dockerClient!.Containers
+                                                  .InspectContainerAsync(_id, token)
+                                                  .ConfigureAwait(false);
+
+                    if (data.State.Running)
+                    {
+                        _task = _dockerClient.Containers
+                                             .GetContainerLogsAsync(_id, parameters, token, this)
+                                             .ContinueWith(task => _task = StartLogStream(token), token);
+
+                        isLoggingStarted = true;
+                    }
+                    else
+                    {
+                        token.WaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Unknown error while starting docker log forwarding.");
+                }
             }
         }
 
